@@ -1,0 +1,124 @@
+{# Photo when one exists (falls back to the named placeholder if it fails to load); named placeholder otherwise.
+   short=true → the placeholder shows initials because the full name is already printed under it. #}
+{% macro media(src, label, cls='', short=false) -%}
+  {% if src %}<img class="media-img {{ cls }}" src="{{ src }}" alt="{{ label }}" loading="lazy" decoding="async" referrerpolicy="no-referrer"{% if short %} data-short="{{ initials(label) }}"{% endif %} onerror="phFallback(this)">
+  {%- else %}<div class="ph {{ cls }}" role="img" aria-label="{{ label }}"><span>{{ initials(label) if short else label }}</span></div>{% endif %}
+{%- endmacro %}
+
+{% macro flashes() -%}
+  {% for cat, msg in get_flashed_messages(with_categories=true) %}
+    <div class="form-{{ 'error' if cat == 'error' else 'ok' }}" role="{{ 'alert' if cat == 'error' else 'status' }}">{{ msg }}</div>
+  {% endfor %}
+{%- endmacro %}
+
+{% macro error_box(error) -%}
+  {% if error %}<div class="form-error" role="alert">{{ error }}</div>{% endif %}
+{%- endmacro %}
+
+{% macro csrf() -%}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{%- endmacro %}
+
+{% macro password_field(id, label, autocomplete, extra='', required=true) -%}
+<div class="field field--pw"><label for="{{ id }}">{{ label }}</label>
+  <input id="{{ id }}" name="{{ id }}" type="password" autocomplete="{{ autocomplete }}" {{ 'required' if required }} {{ extra|safe }}>
+  <button type="button" class="plain-btn field__toggle" data-toggle-password="{{ id }}" aria-pressed="false" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">
+    <span class="i-show">{{ icon('eye') }}</span><span class="i-hide">{{ icon('eyeOff') }}</span>
+  </button>
+</div>
+{%- endmacro %}
+
+{% macro recipe_card(r) -%}
+<article class="rcard">
+  <div class="rcard__media">{{ media(r.image_url, r.title, 'ph--round') }}</div>
+  <div class="rcard__body">
+    <div class="rcard__title">
+      <a href="/resep/{{ r.id }}">{{ r.title }}</a>
+      <button class="plain-btn rcard__bm" data-bookmark="{{ r.id }}" aria-pressed="{{ 'true' if r.bookmarked else 'false' }}" aria-label="{{ 'Hapus dari tersimpan' if r.bookmarked else 'Simpan resep' }}">{{ icon('bookmark', fill=r.bookmarked) }}</button>
+    </div>
+    <div class="rcard__meta">
+      <span class="meta"><span class="star">{{ icon('star', size=16, fill=true) }}</span>{{ '%.1f' % r.rating if r.rating else 'Baru' }}</span>
+      <span class="meta">{{ icon('clock', size=16) }}{{ r.total_minutes }} mnt</span>
+    </div>
+    {% if r.matched is defined %}<p class="rcard__match"><b>{{ r.matched }}</b> dari {{ r.ingredient_total }} bahan ada di keranjang</p>{% endif %}
+  </div>
+</article>
+{%- endmacro %}
+
+{# Portion stepper + copy list (Adjust Portion / Copy Ingredient List use cases) #}
+{% macro portion_tools(r, panel=true) -%}
+<div class="tools" {% if panel %}data-panel="bahan"{% endif %}>
+  <div class="portion" data-portion data-base="{{ r.servings }}">
+    <button class="plain-btn" type="button" data-portion-step="-1" aria-label="Kurangi porsi">{{ icon('minus') }}</button>
+    <b data-portion-value aria-live="polite">{{ r.servings }}</b>
+    <button class="plain-btn" type="button" data-portion-step="1" aria-label="Tambah porsi">{{ icon('plus') }}</button>
+    <span>porsi</span>
+  </div>
+  <button class="plain-btn" type="button" data-copy-list data-title="{{ r.title }}" aria-label="Salin daftar bahan" title="Salin daftar bahan">{{ icon('copy') }}</button>
+</div>
+{%- endmacro %}
+
+{% macro ingredient_cards(r, cook=false) -%}
+<div class="ing-cards">
+  {% for i in r.ingredients %}
+    {% set tag = 'button' if cook else 'div' %}
+    <{{ tag }} {% if cook %}type="button" aria-pressed="false"{% endif %} class="ing-card {{ 'cook-ing' if cook }} {{ 'is-allergen' if i.allergen }}"
+      data-ing data-name="{{ i.name }}" data-qty="{{ qty_attr(i.quantity) }}" data-unit="{{ i.unit }}" data-note="{{ i.note }}"
+      {% if i.allergen %}title="Kamu alergi bahan ini"{% endif %}>
+      {{ media(i.image_url, i.name, 'ph--round', short=true) }}
+      <b>{{ i.name }}</b>
+      <span data-amount>{{ (format_qty(i.quantity) ~ ' ' ~ i.unit).strip() if i.quantity is not none else (i.note or 'Secukupnya') }}</span>
+    </{{ tag }}>
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro step_media(s, r, label) -%}
+  {% set yt = youtube_embed(s.media_url) or (youtube_embed(r.video_url) if s.position == 1 else none) %}
+  {% if yt and 'placeholder' not in yt %}
+    <iframe src="{{ yt }}" title="Video {{ label }}" allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+  {% elif s.media_url and not youtube_embed(s.media_url) %}
+    <img src="{{ s.media_url }}" alt="{{ label }}" onerror="phFallback(this)">
+  {% elif r.image_url and s.position == 1 %}
+    <img class="media-img" src="{{ r.image_url }}" alt="{{ r.title }}" referrerpolicy="no-referrer" onerror="phFallback(this)">
+  {% else %}
+    <div class="ph ph--lg" role="img" aria-label="Video/Foto {{ label }}"><span>Video/Foto<br>{{ label }}</span></div>
+  {% endif %}
+{%- endmacro %}
+
+{# "Keranjang" / "Keranjang (n)" — opens the basket drawer #}
+{% macro basket_button(count=0) -%}
+<button class="basket-btn" type="button" data-drawer-open="basket" aria-controls="basket" aria-expanded="false">
+  {{ icon('basket') }}<span data-basket-label>{{ 'Keranjang (%d)'|format(count) if count else 'Keranjang' }}</span>
+</button>
+{%- endmacro %}
+
+{% macro basket(items, mode) -%}
+<div class="drawer-scrim" data-drawer-close></div>
+<aside class="drawer" id="basket" role="dialog" aria-modal="true" aria-labelledby="basket-title" data-mode="{{ mode }}">
+  <div class="drawer__head">
+    <h2 id="basket-title">{{ icon('basket') }} <span data-basket-label>{{ 'Keranjang (%d)'|format(items|length) if items else 'Keranjang' }}</span></h2>
+    <button class="plain-btn drawer__close" type="button" data-drawer-close aria-label="Tutup keranjang">{{ icon('close') }}</button>
+  </div>
+  <div class="basket__grid" data-basket-grid>
+    {% for i in items %}
+      <div class="basket__item" data-id="{{ i.id }}" data-name="{{ i.name }}" data-img="{{ i.image_url or '' }}">
+        {{ media(i.image_url, i.name, 'ph--round', short=true) }}
+        <button class="basket__rm" type="button" data-basket-remove="{{ i.id }}" aria-label="Hapus {{ i.name }}">{{ icon('close') }}</button>
+        <span>{{ i.name }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  <p class="basket__empty" data-basket-empty {{ 'hidden' if items }}>Keranjang masih kosong. Pilih bahan yang ada di dapurmu.</p>
+  <div class="basket__actions">
+    {% if mode == 'pick' %}
+      <button class="btn btn--lg btn--block" type="button" data-basket-search>Cari Resep</button>
+    {% else %}
+      <a class="btn btn--lg btn--block" href="/racik">Tambah bahan</a>
+    {% endif %}
+    <button class="btn btn--ghost btn--sm" type="button" data-basket-clear>Hapus Semua</button>
+  </div>
+</aside>
+{%- endmacro %}
+
+{% macro pick_button(i) -%}
+<button class="pick" type="button" data-pick="{{ i.id }}" data-name="{{ i.name }}" data-img="{{ i.image_url or '' }}" aria-pressed="false">{{ media(i.image_url, i.name, 'ph--round', short=true) }}<span>{{ i.name }}</span></button>
+{%- endmacro %}
