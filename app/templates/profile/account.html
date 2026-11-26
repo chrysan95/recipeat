@@ -1,0 +1,30 @@
+{% extends "partials/_profile_layout.html" %}
+{% from "partials/_macros.html" import csrf, flashes, error_box, password_field %}
+{% block panel %}
+<form class="panel" method="post" action="/profil">
+  {{ csrf() }}
+  <h1 class="panel__title">Informasi Akun</h1>
+  <p class="panel__sub">Nama dan email yang dipakai untuk masuk dan tampil di resepmu.</p>
+  {{ error_box(error) }}{{ flashes() }}
+  <div class="form-stack mt-6">
+    <div class="field"><label for="name">Nama Lengkap</label><input id="name" name="name" required maxlength="60" value="{{ values.name }}"></div>
+    <div class="field"><label for="email">Alamat Email</label><input id="email" name="email" type="email" required value="{{ values.email }}" data-original="{{ current_user.email }}"></div>
+    <div data-current-pw hidden>{{ password_field('current_password', 'Kata sandi saat ini', 'current-password', required=false) }}
+      <p class="field__hint">Wajib diisi untuk mengganti email.</p></div>
+    <label class="row">
+      <span class="switch"><input type="checkbox" name="newsletter" value="1" {{ 'checked' if values.newsletter }}><span></span></span>
+      Intip kabar &amp; resep terbaru
+    </label>
+  </div>
+  <div class="panel__actions">
+    <a class="btn btn--outline" href="/profil">Batal</a>
+    <button class="btn">Simpan Perubahan</button>
+  </div>
+</form>
+<script>
+  const em = document.getElementById('email');
+  const box = document.querySelector('[data-current-pw]');
+  const sync = () => { box.hidden = em.value.trim().toLowerCase() === em.dataset.original; };
+  em.addEventListener('input', sync); sync();
+</script>
+{% endblock %}

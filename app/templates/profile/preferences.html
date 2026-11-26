@@ -1,0 +1,34 @@
+{% extends "partials/_profile_layout.html" %}
+{% from "partials/_macros.html" import csrf, flashes %}
+{% block panel %}
+{% set groups = [('Besar Porsi', 'portions', options.portions, prefs.portions), ('Rasa Favorit', 'tastes', options.tastes, prefs.tastes), ('Waktu Makan', 'meal_times', options.meal_times, prefs.meal_times)] %}
+<form class="panel" method="post" action="/profil/preferensi">
+  {{ csrf() }}{% if welcome %}<input type="hidden" name="welcome" value="1">{% endif %}
+  <h1 class="panel__title">{{ 'Selamat datang, %s!'|format(current_user.name) if welcome else 'Preferensi Makanan' }}</h1>
+  <p class="panel__sub">Pilih yang kamu suka, supaya rekomendasi resep lebih pas.</p>
+  {{ flashes() }}
+  {% for label, name, opts, selected in groups %}
+    <fieldset class="pref-group">
+      <legend>{{ label }} <small>Boleh lebih dari satu</small></legend>
+      <div class="chips">{% for val, txt in opts %}<label class="chip chip--lg"><input type="checkbox" name="{{ name }}" value="{{ val }}" {{ 'checked' if val in selected }}>{{ txt }}</label>{% endfor %}</div>
+    </fieldset>
+  {% endfor %}
+  <fieldset class="pref-group">
+    <legend>Pola Makan <small>Pilih satu</small></legend>
+    <div class="chips">
+      {% for val, txt in options.diets %}<label class="chip chip--lg"><input type="radio" name="diet" value="{{ val }}" {{ 'checked' if prefs.diet == val }}>{{ txt }}</label>{% endfor %}
+      <label class="chip chip--lg"><input type="checkbox" name="halal_only" value="1" {{ 'checked' if prefs.halal_only }}>Halal saja</label>
+    </div>
+  </fieldset>
+  <fieldset class="pref-group">
+    <legend>Alergi / Bahan yang Dihindari <small>Resep berisi bahan ini akan disaring &amp; ditandai</small></legend>
+    <div class="chips">{% for i in chips %}<label class="chip chip--lg"><input type="checkbox" name="allergies" value="{{ i.id }}" {{ 'checked' if i.id in chosen }}>{{ i.name }}</label>{% endfor %}</div>
+    <div class="field mt-4" style="max-width:24rem"><label for="allergy_add">Tambah bahan lain</label>
+      <select id="allergy_add" name="allergy_add"><option value="">Pilih bahan…</option>{% for i in others %}<option value="{{ i.id }}">{{ i.name }}</option>{% endfor %}</select></div>
+  </fieldset>
+  <div class="panel__actions">
+    <a class="btn btn--outline" href="{{ '/' if welcome else '/profil' }}">{{ 'Lewati' if welcome else 'Batal' }}</a>
+    <button class="btn">Simpan Perubahan</button>
+  </div>
+</form>
+{% endblock %}

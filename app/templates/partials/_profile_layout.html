@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import csrf %}
+{% set hide_nav = true %}
+{% block content %}
+<main class="container page">
+  <a class="back-link" href="/"><span class="back-btn">{{ icon('arrowLeft') }}</span> Kembali ke halaman utama</a>
+  <div class="panel-wrap">
+    <aside class="sidebar">
+      <form class="avatar-edit" method="post" action="/profil/foto" enctype="multipart/form-data">
+        {{ csrf() }}<input type="hidden" name="next" value="{{ request.path }}">
+        <div class="avatar-edit__pic">
+        {% if current_user.avatar_url %}<img class="avatar avatar--xl" src="{{ current_user.avatar_url }}" alt="Foto profil {{ current_user.name }}">
+        {% else %}<div class="avatar avatar--xl">{{ initials(current_user.name) }}</div>{% endif %}
+        <input class="file-input" id="avatar-file" name="photo" type="file" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()">
+        <label class="avatar-edit__btn" for="avatar-file" title="Ganti foto profil">{{ icon('edit') }}<span class="sr-only">Ganti foto profil</span></label>
+        </div>
+        {% if current_user.avatar_url %}<button class="btn btn--ghost btn--xs avatar-edit__rm" name="action" value="remove" formnovalidate>Hapus foto</button>{% endif %}
+      </form>
+      <p class="sidebar__name">{{ current_user.name }}</p>
+      <p class="sidebar__email">{{ current_user.email }}</p>
+      <nav aria-label="Menu profil">
+        <a href="/profil" class="{{ 'is-active' if section == 'akun' }}">Informasi Akun</a>
+        <a href="/profil/kata-sandi" class="{{ 'is-active' if section == 'sandi' }}">Ganti Kata Sandi</a>
+        <a href="/profil/preferensi" class="{{ 'is-active' if section == 'preferensi' }}">Preferensi Makanan</a>
+        <a href="/bahan/ajukan">Pengajuan Bahan</a>
+        {% if current_user.role == 'admin' %}<a href="/admin/bahan" class="{{ 'is-active' if section == 'admin' }}">Verifikasi Bahan</a>{% endif %}
+        {% if current_user.role in ('sponsor', 'admin') %}<a href="/sponsor/promosi" class="{{ 'is-active' if section == 'sponsor' }}">Kelola Promosi</a>{% endif %}
+        <hr>
+        <button type="button" class="sidebar__logout" data-open="logout-modal">{{ icon('logout') }} Keluar</button>
+      </nav>
+    </aside>
+    {% block panel %}{% endblock %}
+  </div>
+</main>
+<div class="modal" id="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+  <form class="modal__box" method="post" action="/keluar">
+    {{ csrf() }}
+    <h2 id="logout-title">Keluar dari akun?</h2>
+    <p>Kamu perlu masuk lagi untuk melanjutkan.</p>
+    <div class="panel__actions">
+      <button type="button" class="btn btn--outline" data-close>Batal</button>
+      <button class="btn btn--danger">Keluar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
