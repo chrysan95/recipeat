@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import media, recipe_card %}
+{% block content %}
+<main class="container page home">
+  <section>
+    <p class="greet">Halo {{ current_user.name }}</p>
+    <h1 class="home__title">Mau masak apa hari ini?</h1>
+    <form class="search search--hero mt-3" action="/cari" role="search">
+      <label for="q" class="sr-only">Cari resep</label>
+      <input id="q" name="q" placeholder="Cari Resep" autocomplete="off">
+      <button aria-label="Cari">{{ icon('search') }}</button>
+    </form>
+
+    <div class="section">
+      <div class="section-head">
+        <h2 class="lead"><i><b>Racik</b></i> resep dari isi dapurmu</h2>
+        <a class="link-more" href="/racik">Lihat Semua {{ icon('chevronRight', size=16) }}</a>
+      </div>
+      <div class="ing-row scroller mt-2">
+        {% for i in popular %}<a class="ing" href="/racik?tambah={{ i.id }}" title="Tambahkan {{ i.name }} ke keranjang">{{ media(i.image_url, i.name, 'ph--round', short=true) }}<span>{{ i.name }}</span></a>{% endfor %}
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <nav class="chips" aria-label="Filter resep">
+        <a class="chip {{ 'is-active' if semua }}" href="/?tab=semua" {% if semua %}aria-current="page"{% endif %}>Semua</a>
+        <a class="chip {{ 'is-active' if not rasa and not semua }}" href="/" {% if not rasa and not semua %}aria-current="page"{% endif %}>Populer</a>
+        {% for t in taste_tags %}<a class="chip {{ 'is-active' if rasa == t.slug }}" href="/?rasa={{ t.slug }}" {% if rasa == t.slug %}aria-current="page"{% endif %}>{{ t.name }}</a>{% endfor %}
+      </nav>
+      <div class="grid-cards mt-3">{% for r in recipes %}{{ recipe_card(r) }}{% endfor %}</div>
+      {% if not recipes %}<div class="empty mt-3">Belum ada resep untuk filter ini.</div>{% endif %}
+    </div>
+  </section>
+
+  <aside>
+    <div class="promo">
+      <div class="promo__head">
+        <h2 class="promo__title">Bagikan Resep Andalanmu!</h2>
+        <a class="btn btn--white btn--xs" href="/resep/baru">Mulai {{ icon('chevronRight') }}</a>
+      </div>
+      <p class="promo__body">Tulis resep kreasimu dan jadikan inspirasi bagi jutaan koki rumahan.</p>
+    </div>
+
+    {% if promo %}
+      <a class="promo promo--sponsor" href="{{ promo.cta_url or '/notifikasi' }}">
+        <p class="promo__by">Dipersembahkan oleh <b>{{ promo.brand }}</b></p>
+        <h2 class="promo__title">{{ promo.title }}</h2>
+        {% if promo.body %}<p class="promo__body">{{ promo.body }}</p>{% endif %}
+      </a>
+    {% endif %}
+
+    {% if reco %}
+      <h2 class="h2 reco-title">Rekomendasi Hari Ini</h2>
+      <article class="reco">
+        <div class="reco__head">
+          <h3>{{ reco.title }}</h3>
+          <button class="plain-btn" data-bookmark="{{ reco.id }}" aria-pressed="{{ 'true' if reco.bookmarked else 'false' }}" aria-label="Simpan resep">{{ icon('bookmark', fill=reco.bookmarked) }}</button>
+        </div>
+        {% if reco.description %}<p class="reco__desc">{{ reco.description }}</p>{% endif %}
+        <div class="reco__body">
+          {{ media(reco.image_url, reco.title, 'ph--round ph--lg') }}
+          <div class="reco__stats">
+            <span class="star">{{ icon('star', fill=true) }}</span><span>{{ '%.1f' % reco.rating if reco.rating else 'Baru' }}</span>
+            {{ icon('clock') }}<span>{{ reco.total_minutes }} mnt</span>
+          </div>
+        </div>
+        <div class="reco__notch"><a class="reco__go" href="/resep/{{ reco.id }}" aria-label="Lihat resep {{ reco.title }}">{{ icon('arrowRight') }}</a></div>
+      </article>
+    {% endif %}
+  </aside>
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}

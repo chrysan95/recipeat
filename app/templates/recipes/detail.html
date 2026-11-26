@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import media, ingredient_cards, portion_tools, flashes, csrf %}
+{% block content %}
+<main class="container page">
+  <section class="hero">
+    <a class="back-btn hero__back" href="javascript:history.back()" aria-label="Kembali">{{ icon('arrowLeft') }}</a>
+    <button class="plain-btn hero__bm" data-bookmark="{{ r.id }}" aria-pressed="{{ 'true' if r.bookmarked else 'false' }}" aria-label="Simpan resep">{{ icon('bookmark', fill=r.bookmarked) }}</button>
+    <div class="hero__media">{{ media(r.image_url, r.title, 'ph--round ph--lg') }}</div>
+    <div class="hero__text">
+      <div class="author">
+        <span class="avatar avatar--sm">{{ initials(r.author.name) }}</span>
+        <div><b>{{ r.author.name }}</b><br>{{ format_date(r.created_at) }}</div>
+      </div>
+      <h1 class="hero__title">{{ r.title }}</h1>
+      {% if r.description %}<p class="hero__desc">{{ r.description }}</p>{% endif %}
+      <div class="chips">
+        {% for t in r.tags if t.kind != 'waktu' %}<a class="tag {{ 'tag--soft' if t.kind == 'jenis' }}" href="/cari?{{ t.kind }}={{ t.slug }}">{{ t.name }}</a>{% endfor %}
+      </div>
+      <p class="facts-note">Persiapan {{ r.prep_minutes }} mnt · Masak {{ r.cook_minutes }} mnt · {{ price_range(r.price_min, r.price_max) }} untuk {{ r.servings }} porsi{% if r.origin %} · Asal {{ r.origin }}{% endif %}</p>
+      <div class="facts">
+        <span class="meta"><span class="star">{{ icon('star', fill=true) }}</span>{{ '%.1f' % r.rating if r.rating else 'Baru' }}</span>
+        <span class="meta">{{ icon('clock') }}{{ r.total_minutes }} mnt</span>
+        <a class="btn btn--light btn--lg" href="/resep/{{ r.id }}/masak">Mulai masak {{ icon('arrowRight') }}</a>
+      </div>
+    </div>
+  </section>
+
+  {% if r.allergens %}
+    <div class="alert" role="alert">{{ icon('warning') }}<span>Resep ini mengandung bahan yang kamu hindari: <b>{{ r.allergens|join(', ') }}</b>.</span></div>
+  {% endif %}
+
+  <div class="section" data-tabs>
+    <div class="toolbar">
+      <div class="tabs" role="tablist">
+        <button role="tab" data-tab="bahan" class="{{ 'is-active' if tab == 'bahan' }}" aria-selected="{{ 'true' if tab == 'bahan' else 'false' }}">Bahan</button>
+        <button role="tab" data-tab="langkah" class="{{ 'is-active' if tab == 'langkah' }}" aria-selected="{{ 'true' if tab == 'langkah' else 'false' }}">Langkah</button>
+      </div>
+      {{ portion_tools(r) }}
+    </div>
+    <div data-panel="bahan" {{ 'hidden' if tab != 'bahan' }}>{{ ingredient_cards(r) }}</div>
+    <div data-panel="langkah" class="steps mt-4" {{ 'hidden' if tab != 'langkah' }}>
+      {% for s in r.steps %}<div class="step"><p class="step__num">Langkah {{ s.position }}</p><h3 class="step__title">{{ s.title }}</h3><p class="step__body">{{ s.body }}</p></div>{% endfor %}
+    </div>
+  </div>
+
+  <section class="section" id="ulasan">
+    <h2 class="h2">Ulasan <span class="muted regular">({{ r.review_count }})</span></h2>
+    {{ flashes() }}
+    {% if r.author_id != current_user.id %}
+      <form method="post" action="/resep/{{ r.id }}/ulasan" class="step review-form">
+        {{ csrf() }}
+        <fieldset style="border:0;padding:0;margin:0">
+          <legend class="h3">{{ 'Ubah ulasanmu' if r.my_review else 'Sudah coba resep ini?' }}</legend>
+          <div class="stars-input mt-2">
+            {% for s in range(5, 0, -1) %}
+              <input type="radio" id="star{{ s }}" name="rating" value="{{ s }}" {{ 'checked' if r.my_review and r.my_review.rating == s }} required>
+              <label for="star{{ s }}" aria-label="{{ s }} bintang">{{ icon('star', fill=true) }}</label>
+            {% endfor %}
+          </div>
+        </fieldset>
+        <div class="field mt-4"><label for="comment">Komentar (opsional)</label><textarea id="comment" name="comment" maxlength="500">{{ r.my_review.comment if r.my_review else '' }}</textarea></div>
+        <button class="btn mt-3">Kirim ulasan</button>
+      </form>
+    {% endif %}
+    <div class="reviews">
+      {% for rv in r.reviews %}
+        <div class="review">
+          <span class="avatar avatar--sm">{{ initials(rv.name) }}</span>
+          <div>
+            <p><b>{{ rv.name }}</b> <span class="review__stars" aria-label="{{ rv.rating }} dari 5 bintang">{{ '★' * rv.rating }}<span class="off">{{ '★' * (5 - rv.rating) }}</span></span></p>
+            <p class="muted">{{ time_ago(rv.created_at) }}</p>
+            {% if rv.comment %}<p class="mt-1">{{ rv.comment }}</p>{% endif %}
+          </div>
+        </div>
+      {% else %}<p class="muted">Belum ada ulasan.</p>{% endfor %}
+    </div>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}

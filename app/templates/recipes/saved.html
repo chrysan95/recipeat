@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import recipe_card %}
+{% block content %}
+<main class="container page">
+  <div class="page-head">
+    <div class="page-head__title"><a class="back-btn" href="/resep" aria-label="Kembali">{{ icon('arrowLeft') }}</a><h1 class="h1">Resep Tersimpan</h1></div>
+    <form class="search" action="/resep/tersimpan" role="search" style="width:min(22rem,100%)">
+      {{ icon('search') }}<label class="sr-only" for="q">Cari di tersimpan</label>
+      <input id="q" name="q" value="{{ q }}" placeholder="Cari di resep tersimpan"><input type="hidden" name="rasa" value="{{ rasa }}">
+    </form>
+  </div>
+  <nav class="chips mt-4" aria-label="Filter rasa">
+    <a class="chip {{ 'is-active' if not rasa }}" href="/resep/tersimpan?q={{ q|urlencode }}">Semua</a>
+    {% for t in rasa_tags %}<a class="chip {{ 'is-active' if rasa == t.slug }}" href="?rasa={{ t.slug }}&q={{ q|urlencode }}">{{ t.name }}</a>{% endfor %}
+  </nav>
+  <div class="grid-cards mt-4">{% for r in recipes %}{{ recipe_card(r) }}{% endfor %}</div>
+  {% if not recipes %}<div class="empty mt-4">Tidak ada resep tersimpan yang cocok.</div>{% endif %}
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}

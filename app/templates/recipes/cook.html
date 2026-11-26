@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import media, ingredient_cards, portion_tools, step_media %}
+{% block content %}
+<main class="container page" data-tabs>
+  <div class="cook-head">
+    <a class="back-btn" href="/resep/{{ r.id }}" aria-label="Kembali ke resep">{{ icon('arrowLeft') }}</a>
+    {{ media(r.image_url, r.title, 'ph--round', short=true) }}
+    <h1 class="h1">{{ r.title }}</h1>
+  </div>
+  <div class="toolbar mt-6">
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="bahan" class="is-active" aria-selected="true">Bahan</button>
+      <button role="tab" data-tab="langkah" aria-selected="false">Langkah</button>
+    </div>
+    {{ portion_tools(r) }}
+  </div>
+
+  <section data-panel="bahan" class="mt-4">
+    <p class="muted">Ketuk bahan yang sudah kamu siapkan.</p>
+    {{ ingredient_cards(r, cook=true) }}
+  </section>
+
+  <section data-panel="langkah" hidden>
+    <div class="stepper" data-stepper data-total="{{ r.steps|length }}">
+      <div class="stepper__head">
+        <p><b>Langkah <span data-step-num>1</span></b> dari {{ r.steps|length }}</p>
+        <div class="row">
+          <button class="btn btn--outline" type="button" data-step-prev aria-label="Langkah sebelumnya">{{ icon('arrowLeft') }}</button>
+          <button class="btn" type="button" data-step-next><span data-next-label>Berikut</span> {{ icon('arrowRight') }}</button>
+        </div>
+      </div>
+      {% for s in r.steps %}{% set label = 'Langkah %d – %s'|format(s.position, s.title) %}
+        <div class="stepper__grid" data-step="{{ loop.index0 }}" {{ 'hidden' if not loop.first }}>
+          <div class="stepper__media">
+            <button class="plain-btn stepper__expand" type="button" data-expand="{{ loop.index0 }}" aria-label="Perbesar media">{{ icon('expand') }}</button>
+            <div data-media-src="{{ loop.index0 }}" style="height:100%">{{ step_media(s, r, label) }}</div>
+          </div>
+          <div><h2 class="stepper__title">{{ s.title }}</h2><p class="stepper__body">{{ s.body }}</p></div>
+        </div>
+      {% endfor %}
+      <div class="progress" aria-hidden="true">{% for s in r.steps %}<span data-bar="{{ loop.index0 }}"></span>{% endfor %}</div>
+    </div>
+  </section>
+</main>
+<div class="modal" id="media-modal" role="dialog" aria-modal="true" aria-label="Media langkah">
+  <div class="modal__media">
+    <button class="plain-btn stepper__expand" type="button" data-close aria-label="Tutup">{{ icon('close') }}</button>
+    <div data-modal-slot style="width:100%;height:100%"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}

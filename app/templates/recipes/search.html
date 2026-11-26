@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import recipe_card %}
+{% block content %}
+<main class="container page">
+  <div class="page-head">
+    <div class="page-head__title"><a class="back-btn" href="/" aria-label="Kembali">{{ icon('arrowLeft') }}</a><h1 class="h1">Hasil Pencarian</h1></div>
+    <form class="search" action="/cari" role="search" style="width:min(24rem,100%)">
+      {{ icon('search') }}<label for="q" class="sr-only">Cari resep</label>
+      <input id="q" name="q" value="{{ q }}" placeholder="Mencari resep lain?">
+      <input type="hidden" name="jenis" value="{{ jenis }}"><input type="hidden" name="rasa" value="{{ rasa }}"><input type="hidden" name="urut" value="{{ sort }}">
+    </form>
+  </div>
+
+  <form class="row row--wrap row--top mt-6" action="/cari" style="gap:var(--s2)" aria-label="Filter dan urutkan">
+    <input type="hidden" name="q" value="{{ q }}">
+    <div class="field" style="width:14rem"><label for="jenis">Kategori</label>
+      <select id="jenis" name="jenis" onchange="this.form.submit()"><option value="">Semua kategori</option>
+        {% for t in jenis_tags %}<option value="{{ t.slug }}" {{ 'selected' if jenis == t.slug }}>{{ t.name }}</option>{% endfor %}</select></div>
+    <div class="field" style="width:12rem"><label for="rasa">Rasa</label>
+      <select id="rasa" name="rasa" onchange="this.form.submit()"><option value="">Semua rasa</option>
+        {% for t in rasa_tags %}<option value="{{ t.slug }}" {{ 'selected' if rasa == t.slug }}>{{ t.name }}</option>{% endfor %}</select></div>
+    <div class="field" style="width:14rem"><label for="urut">Urutkan</label>
+      <select id="urut" name="urut" onchange="this.form.submit()">
+        {% for k, v in sort_labels.items() %}<option value="{{ k }}" {{ 'selected' if sort == k }}>{{ v }}</option>{% endfor %}</select></div>
+    <label class="check" style="height:var(--s6)"><input type="checkbox" name="sesuai" value="1" {{ 'checked' if sesuai }} onchange="this.form.submit()"> Sesuai preferensi &amp; alergi saya</label>
+    <noscript><button class="btn btn--sm">Terapkan</button></noscript>
+  </form>
+
+  <p class="muted mt-4">{{ recipes|length }} resep ditemukan{% if q %} untuk “{{ q }}”{% endif %}</p>
+  <div class="grid-cards mt-2">{% for r in recipes %}{{ recipe_card(r) }}{% endfor %}</div>
+  {% if not recipes %}<div class="empty mt-2">Tidak ada resep yang cocok. Coba kata kunci lain atau <a href="/resep/baru"><b>bagikan resepmu</b></a>.</div>{% endif %}
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}

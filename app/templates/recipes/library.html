@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import recipe_card, flashes %}
+{% block content %}
+<main class="container page">
+  {{ flashes() }}
+  <div class="section-head">
+    <h1 class="h1">Resep Tersimpan</h1>
+    <a class="link-more" href="/resep/tersimpan">Lihat Semua {{ icon('chevronRight', size=16) }}</a>
+  </div>
+  <div class="grid-cards mt-4">{% for r in saved %}{{ recipe_card(r) }}{% endfor %}</div>
+  {% if not saved %}<div class="empty mt-4">Belum ada resep tersimpan. Tekan ikon {{ icon('bookmark', size=16) }} pada resep untuk menyimpannya.</div>{% endif %}
+
+  <div class="section-head section" style="align-items:center">
+    <h2 class="h2 row" style="gap:var(--s1)">{{ icon('chef', size=32) }} Resep Anda</h2>
+    <a class="btn" href="/resep/baru">{{ icon('plus') }} Tambah baru</a>
+  </div>
+  <div class="section-head mt-3">
+    <span class="muted"><b>Terakhir diubah</b></span>
+    {% if mine|length > 3 and not show_all %}<a class="link-more" href="/resep?semua=1">Lihat Semua {{ icon('chevronRight', size=16) }}</a>{% endif %}
+  </div>
+  <div class="mine">
+    {% for m in (mine if show_all else mine[:3]) %}
+      <div class="mine__row">
+        <span class="mine__title"><a href="/resep/{{ m.id }}">{{ m.title }}</a>
+          <a href="/resep/{{ m.id }}/ubah" aria-label="Ubah {{ m.title }}" title="Ubah" class="muted">{{ icon('edit') }}</a>
+          {% if m.status == 'draft' %}<span class="badge">Draf</span>{% endif %}</span>
+        <span class="italic muted">{{ time_ago(m.updated_at) }}</span>
+        <span class="meta" title="Rating"><span class="star">{{ icon('star', fill=true) }}</span> {{ '%.1f' % m.rating if m.rating else '-' }}</span>
+        <span class="meta" title="Disimpan">{{ icon('bookmark', fill=true) }} {{ compact_number(m.bookmark_count) }}</span>
+        <span class="meta" title="Ulasan">{{ icon('message') }} {{ compact_number(m.review_count) }}</span>
+      </div>
+    {% else %}<p class="muted center" style="padding:var(--s3) 0">Kamu belum membagikan resep. <a href="/resep/baru"><b>Tulis resep pertamamu</b></a>.</p>{% endfor %}
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}
