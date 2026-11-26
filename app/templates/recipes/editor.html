@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import error_box, csrf %}
+{% macro ing_options(sel) -%}
+  {% for cat, items in groups.items() %}<optgroup label="{{ cat }}">{% for i in items %}<option value="{{ i.id }}" {{ 'selected' if sel == i.id }}>{{ i.name }}</option>{% endfor %}</optgroup>{% endfor %}
+{%- endmacro %}
+{% block content %}
+{% set kinds = [('jenis', 'Jenis makanan'), ('rasa', 'Rasa'), ('waktu', 'Waktu makan')] %}
+<main class="container page">
+  <div class="page-head">
+    <div class="page-head__title">
+      <a class="back-btn" href="/resep" aria-label="Kembali">{{ icon('arrowLeft') }}</a>
+      <h1 class="h1">{{ 'Ubah Resep' if v.id else 'Bagikan Resep Andalanmu' }}</h1>
+    </div>
+  </div>
+  <form class="panel editor mt-4" method="post" enctype="multipart/form-data" action="{{ '/resep/%d/ubah'|format(v.id) if v.id else '/resep/baru' }}">
+    {{ csrf() }}{{ error_box(error) }}
+
+    <fieldset><legend>Informasi resep</legend>
+      <div class="form-stack">
+        <div class="grid-2">
+          <div class="field"><label for="title">Nama resep *</label><input id="title" name="title" required maxlength="80" value="{{ v.title }}"></div>
+          <div class="field"><label for="origin">Asal hidangan</label><input id="origin" name="origin" maxlength="60" placeholder="mis. Padang" value="{{ v.origin or '' }}"></div>
+        </div>
+        <div class="field"><label for="description">Deskripsi singkat</label><textarea id="description" name="description" maxlength="400">{{ v.description }}</textarea></div>
+        <div class="grid-4">
+          <div class="field"><label for="prep">Persiapan (mnt) *</label><input id="prep" type="number" name="prep_minutes" min="0" max="1440" required value="{{ v.prep_minutes if v.prep_minutes is not none else '' }}"></div>
+          <div class="field"><label for="cook">Masak (mnt) *</label><input id="cook" type="number" name="cook_minutes" min="0" max="1440" required value="{{ v.cook_minutes if v.cook_minutes is not none else '' }}"></div>
+          <div class="field"><label for="servings">Porsi *</label><input id="servings" type="number" name="servings" min="1" max="50" required value="{{ v.servings if v.servings is not none else '' }}"></div>
+          <div class="field"><label for="status">Status</label><select id="status" name="status"><option value="published" {{ 'selected' if v.status != 'draft' }}>Terbitkan</option><option value="draft" {{ 'selected' if v.status == 'draft' }}>Simpan draf</option></select></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label for="pmin">Estimasi biaya min (Rp)</label><input id="pmin" type="number" name="price_min" min="0" step="500" value="{{ v.price_min if v.price_min is not none else '' }}"></div>
+          <div class="field"><label for="pmax">Estimasi biaya maks (Rp)</label><input id="pmax" type="number" name="price_max" min="0" step="500" value="{{ v.price_max if v.price_max is not none else '' }}"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    {% for kind, label in kinds %}
+      <fieldset><legend>{{ label }} <small>Boleh lebih dari satu</small></legend>
+        <div class="chips mt-2">{% for t in tags if t.kind == kind %}<label class="chip chip--lg"><input type="checkbox" name="tags" value="{{ t.id }}" {{ 'checked' if t.id in v.tag_ids }}>{{ t.name }}</label>{% endfor %}</div>
+      </fieldset>
+    {% endfor %}
+
+    <fieldset><legend>Bahan *</legend>
+      <p class="hint">Kosongkan jumlah untuk “secukupnya”. Bahan tidak ada? <a href="/bahan/ajukan" target="_blank" rel="noopener"><b>Ajukan bahan baru</b></a> — admin akan memverifikasinya.
+        {% if pending %}<br>Menunggu verifikasi: {{ pending|join(', ') }}{% endif %}</p>
+      <div class="dyn-rows" data-rows="ing">
+        {% for i in (v.ingredients or [{}]) %}
+          <div class="dyn-row dyn-row--ing" data-row>
+            <div class="field"><label>Bahan</label><select name="ing_id" aria-label="Bahan"><option value="">Pilih bahan…</option>{{ ing_options(i.ingredient_id) }}</select></div>
+            <div class="field"><label>Jumlah</label><input name="ing_qty" inputmode="decimal" placeholder="mis. 2" aria-label="Jumlah" value="{{ qty_attr(i.quantity) if i.quantity is defined and i.quantity is not none and i.quantity > 0 else '' }}"></div>
+            <div class="field"><label>Satuan</label><input name="ing_unit" maxlength="20" placeholder="gr, sdm, butir" aria-label="Satuan" value="{{ i.unit or '' }}"></div>
+            <div class="field"><label>Catatan</label><input name="ing_note" maxlength="40" placeholder="Secukupnya / dicincang" aria-label="Catatan" value="{{ i.note or '' }}"></div>
+            <button type="button" class="plain-btn row-rm" data-remove aria-label="Hapus bahan" title="Hapus bahan">{{ icon('trash') }}</button>
+          </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="btn btn--outline btn--sm dyn-add" data-add="ing">{{ icon('plus') }} Tambah bahan</button>
+    </fieldset>
+
+    <fieldset><legend>Langkah *</legend>
+      <div class="dyn-rows" data-rows="step">
+        {% for s in (v.steps or [{}]) %}
+          <div class="dyn-row dyn-row--step" data-row>
+            <div class="field"><label>Judul langkah</label><input name="step_title" maxlength="60" placeholder="Tumis Bumbu" aria-label="Judul langkah" value="{{ s.title or '' }}"></div>
+            <div class="field"><label>Penjelasan</label><textarea name="step_body" maxlength="1000" rows="1" aria-label="Penjelasan">{{ s.body or '' }}</textarea></div>
+            <div class="field"><label>Link video/foto (opsional)</label><input name="step_media" type="url" placeholder="https://youtu.be/…" aria-label="Link video atau foto" value="{{ s.media_url or '' }}"></div>
+            <button type="button" class="plain-btn row-rm" data-remove aria-label="Hapus langkah" title="Hapus langkah">{{ icon('trash') }}</button>
+          </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="btn btn--outline btn--sm dyn-add" data-add="step">{{ icon('plus') }} Tambah langkah</button>
+    </fieldset>
+
+    <fieldset><legend>Referensi visual</legend>
+      <div class="field mt-4"><label for="video">Link video panduan (opsional)</label><input id="video" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=…" value="{{ v.video_url or '' }}"></div>
+      <div class="upload">
+        {% if v.image_url %}<img class="media-img ph--round" src="{{ v.image_url }}" alt="Foto saat ini" data-file-preview referrerpolicy="no-referrer">{% else %}<div class="ph ph--round" data-file-preview><span>Foto resep</span></div>{% endif %}
+        <div class="upload__info">
+          <p><b>Foto hidangan</b> <span class="muted">JPG/PNG/WEBP, maks 3 MB</span></p>
+          <input class="file-input" id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" data-file>
+          <label class="btn btn--outline btn--sm" for="image">{{ icon('upload') }} Pilih foto</label>
+          <span class="upload__name" data-file-name>Belum ada file dipilih</span>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="panel__actions">
+      <a class="btn btn--outline" href="{{ '/resep/%d'|format(v.id) if v.id else '/resep' }}">Batal</a>
+      <button class="btn" type="submit">{{ 'Simpan Perubahan' if v.id else 'Simpan Resep' }}</button>
+    </div>
+  </form>
+  {% if v.id %}
+    <form method="post" action="/resep/{{ v.id }}/hapus" class="mt-3" style="text-align:right" onsubmit="return confirm('Hapus resep ini? Tindakan ini tidak bisa dibatalkan.')">
+      {{ csrf() }}<button class="btn btn--ghost btn--sm danger-link">{{ icon('trash') }} Hapus resep</button>
+    </form>
+  {% endif %}
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.querySelectorAll('[data-add]').forEach((btn) => btn.addEventListener('click', () => {
+    const box = document.querySelector(`[data-rows="${btn.dataset.add}"]`);
+    const row = box.querySelector('[data-row]').cloneNode(true);
+    row.querySelectorAll('input, textarea').forEach((el) => { el.value = ''; });
+    row.querySelectorAll('select').forEach((el) => { el.selectedIndex = 0; });
+    box.appendChild(row);
+    row.querySelector('input, select').focus();
+  }));
+  document.addEventListener('click', (e) => {
+    const rm = e.target.closest('[data-remove]');
+    if (!rm) return;
+    const box = rm.closest('[data-rows]');
+    if (box.querySelectorAll('[data-row]').length > 1) rm.closest('[data-row]').remove();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import basket as basket_panel, basket_button, recipe_card %}
+{% block content %}
+<main class="container page">
+  <div class="page-head">
+    <div class="page-head__title"><a class="back-btn" href="/racik" aria-label="Kembali">{{ icon('arrowLeft') }}</a><h1 class="h1">Hasil Pencarian</h1></div>
+    <form class="search" action="/cari" role="search" style="width:min(20rem,100%)">
+      {{ icon('search') }}<label for="q" class="sr-only">Cari resep lain</label>
+      <input id="q" name="q" placeholder="Mencari resep lain?">
+    </form>
+    {{ basket_button(basket|length) }}
+  </div>
+  <p class="muted mt-3">Diurutkan dari resep yang bahannya paling lengkap. Garam, gula, minyak, dan air dianggap sudah ada. Resep disaring sesuai <a href="/profil/preferensi"><b>preferensi &amp; alergimu</b></a>.</p>
+  <div class="grid-cards mt-4">{% for r in recipes %}{{ recipe_card(r) }}{% endfor %}</div>
+  {% if not recipes %}<div class="empty mt-4">Belum ada resep yang memakai bahan ini. Coba tambah bahan lain.</div>{% endif %}
+</main>
+{{ basket_panel(basket, "results") }}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/racik.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>
+{% endblock %}

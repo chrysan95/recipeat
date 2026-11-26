@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import basket, basket_button, pick_button %}
+{% block content %}
+<main class="container page">
+  <div class="racik-bar">
+    <label class="search">
+      {{ icon('search') }}<span class="sr-only">Cari bahan</span>
+      <input type="search" placeholder="Bahan apa yang kamu punya?" data-ing-filter>
+    </label>
+    <div class="cat-anchor">
+      <button class="cat-toggle" type="button" data-cat-toggle aria-expanded="false" aria-controls="cat-menu" aria-label="Cari melalui kategori">{{ icon('grid') }}</button>
+      <div class="cat-menu" id="cat-menu">
+        <p class="cat-menu__title">Cari melalui <b>Kategori</b></p>
+        <div class="cat-menu__grid">{% for c in cats %}<a href="/racik?kategori={{ c.slug }}" class="{{ 'is-active' if c.id == current.id }}">{{ c.name }}</a>{% endfor %}</div>
+      </div>
+    </div>
+    <nav class="cat-tabs scroller" aria-label="Kategori bahan">
+      {% for c in cats %}<a href="/racik?kategori={{ c.slug }}" class="{{ 'is-active' if c.id == current.id }}" {% if c.id == current.id %}aria-current="page"{% endif %}>{{ c.name }}</a>{% endfor %}
+    </nav>
+    {{ basket_button() }}
+  </div>
+
+  <h1 class="sr-only">Racik — pilih bahan {{ current.name }}</h1>
+  <div class="ing-grid" style="margin-top:var(--s6)">
+    {% for i in all if i.category == current.slug %}{{ pick_button(i) }}{% endfor %}
+  </div>
+
+  <section class="racik-section">
+    <h2 class="h3">Populer</h2>
+    <div class="ing-grid">{% for i in popular %}{{ pick_button(i) }}{% endfor %}</div>
+  </section>
+
+  {% for c in cats if c.id != current.id %}
+    {% set items = all|selectattr('category', 'equalto', c.slug)|list %}
+    {% if items %}
+      <section class="racik-section" id="{{ c.slug }}">
+        <h2 class="h3">{{ c.name }}</h2>
+        <div class="ing-grid">{% for i in items %}{{ pick_button(i) }}{% endfor %}</div>
+      </section>
+    {% endif %}
+  {% endfor %}
+
+  <div class="empty racik-empty">Bahan yang kamu cari tidak ada? <a href="/bahan/ajukan"><b>Ajukan bahan baru</b></a> beserta fotonya.</div>
+</main>
+{{ basket([], 'pick') }}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/racik.js') }}" defer></script>{% endblock %}
