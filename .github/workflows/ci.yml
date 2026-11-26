@@ -1,0 +1,56 @@
+name: CI
+
+# Vercel deploys every push by itself (production on main, previews on other branches).
+# This workflow checks the same code against real PostgreSQL + Redis.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: recipeat_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/recipeat_test
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/recipeat_test
+      REDIS_URL: redis://localhost:6379/0
+      TEST_REDIS_URL: redis://localhost:6379/15
+      SECRET_KEY: ci-only
+      BCRYPT_ROUNDS: "4"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - name: Cold start like Vercel (migrate + dummy data on an empty database)
+        run: AUTO_MIGRATE=1 python -c "import wsgi"
+      - name: Migrations match the models
+        run: flask db check
+      - name: Dummy SQL dump builds
+        run: flask dump-sql
+      - name: Tests
+        run: pytest
+      - name: App boots and is healthy
+        run: |
+          gunicorn wsgi:app --daemon --pid /tmp/gunicorn.pid
+          sleep 3
+          curl -fsS http://localhost:8000/healthz
+          curl -fsS -o /dev/null http://localhost:8000/static/css/style.css
+          kill "$(cat /tmp/gunicorn.pid)"

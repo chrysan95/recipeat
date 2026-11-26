@@ -1,0 +1,13 @@
+# Not needed in the deployed function (keeps the bundle small)
+tests/
+database/
+.github/
+docker-compose.yml
+gunicorn.conf.py
+requirements-dev.txt
+pytest.ini
+.env
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
