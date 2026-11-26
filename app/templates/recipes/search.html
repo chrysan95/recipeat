@@ -31,4 +31,4 @@
   {% if not recipes %}<div class="empty mt-2">Tidak ada resep yang cocok. Coba kata kunci lain atau <a href="/resep/baru"><b>bagikan resepmu</b></a>.</div>{% endif %}
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ asset('js/recipe.js') }}" defer></script>{% endblock %}

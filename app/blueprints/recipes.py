@@ -5,6 +5,7 @@ from flask import Blueprint, abort, flash, jsonify, redirect, render_template, r
 from flask_login import current_user, login_required
 from sqlalchemy import text
 
+from ..auth_utils import home_for
 from ..extensions import db
 from ..personalise import avoid_for, recommend
 from ..recipes import SORT_LABELS, SORTS, approved_ingredients, get_recipe, list_recipes, tags_by_kind
@@ -20,6 +21,8 @@ def _auth():
 
 @bp.get("/")
 def home():
+    if current_user.role != "user":
+        return redirect(home_for(current_user))
     rasa = request.args.get("rasa", "")
     semua = request.args.get("tab") == "semua" and not rasa
     taste_tags = [t for t in tags_by_kind("rasa") if t["slug"] in ("asin", "manis", "pedas")]
@@ -46,12 +49,10 @@ def search():
 
 @bp.get("/resep")
 def library():
-    saved = list_recipes(user_id=current_user.id, bookmarked_only=True, sort="terbaru", limit=4)
-    mine = db.session.execute(text("""SELECT r.id, r.title, r.status, r.updated_at,
-          COALESCE((SELECT ROUND(AVG(rating)::numeric,1)::float FROM reviews WHERE recipe_id = r.id), 0) AS rating,
-          (SELECT COUNT(*) FROM bookmarks WHERE recipe_id = r.id) AS bookmark_count,
-          (SELECT COUNT(*) FROM reviews WHERE recipe_id = r.id) AS review_count
-        FROM recipes r WHERE r.author_id = :u ORDER BY r.updated_at DESC"""), {"u": current_user.id}).mappings().all()
+    if current_user.role == "admin":
+        return redirect(home_for(current_user))
+    saved = list_recipes(user_id=current_user.id, bookmarked_only=True, sort="terbaru", limit=4) if current_user.role == "user" else []
+    mine = list_recipes(user_id=current_user.id, author_id=current_user.id, include_drafts=True, sort="diubah")
     return render_template("recipes/library.html", title="Resep", active="resep", saved=saved, mine=mine, show_all=request.args.get("semua") == "1")
 
 

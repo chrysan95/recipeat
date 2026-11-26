@@ -15,8 +15,8 @@ def get_prefs(user_id):
     return p
 
 
-def avoid_for(user_id):
-    p = get_prefs(user_id)
+def avoid_for(user_id, prefs=None):
+    p = prefs or get_prefs(user_id)
     return {"ingredient_ids": [a["id"] for a in p["allergies"]], "vegan": p["diet"] == "vegan",
             "vegetarian": p["diet"] == "vegetarian", "halal": p["halal_only"]}
 
@@ -33,7 +33,7 @@ def _portion_fits(portion, servings, tags):
 
 def recommend(user_id, limit=4):
     p = get_prefs(user_id)
-    candidates = list_recipes(user_id=user_id, avoid=avoid_for(user_id), sort="rating")
+    candidates = list_recipes(user_id=user_id, avoid=avoid_for(user_id, p), sort="rating")
     if not candidates:
         return []
     rows = db.session.execute(text("SELECT rt.recipe_id, t.slug FROM recipe_tags rt JOIN tags t ON t.id = rt.tag_id WHERE rt.recipe_id IN :ids")

@@ -1,7 +1,7 @@
 {# Photo when one exists (falls back to the named placeholder if it fails to load); named placeholder otherwise.
    short=true → the placeholder shows initials because the full name is already printed under it. #}
 {% macro media(src, label, cls='', short=false) -%}
-  {% if src %}<img class="media-img {{ cls }}" src="{{ src }}" alt="{{ label }}" loading="lazy" decoding="async" referrerpolicy="no-referrer"{% if short %} data-short="{{ initials(label) }}"{% endif %} onerror="phFallback(this)">
+  {% if src %}<img class="media-img {{ cls }}" src="{{ src }}" alt="{{ label }}"{% if credit_for(src) %} title="{{ credit_for(src) }}"{% endif %} loading="lazy" decoding="async" referrerpolicy="no-referrer"{% if short %} data-short="{{ initials(label) }}"{% endif %} onerror="phFallback(this)">
   {%- else %}<div class="ph {{ cls }}" role="img" aria-label="{{ label }}"><span>{{ initials(label) if short else label }}</span></div>{% endif %}
 {%- endmacro %}
 

@@ -55,7 +55,8 @@ def results():
 def request_page(error=None, values=None):
     mine = db.session.execute(text("""SELECT i.name, i.status, i.review_note, i.created_at, c.name AS category FROM ingredients i
         JOIN ingredient_categories c ON c.id = i.category_id WHERE i.requested_by = :u ORDER BY i.created_at DESC"""), {"u": current_user.id}).mappings().all()
-    return render_template("racik/request.html", title="Ajukan Bahan Baru", active="racik", cats=categories(), mine=mine,
+    return render_template("racik/request.html", title="Ajukan Bahan Baru", active="racik" if current_user.role == "user" else "resep",
+                           back={"admin": "/admin/bahan", "sponsor": "/resep"}.get(current_user.role, "/racik"), cats=categories(), mine=mine,
                            error=error, values=values or {}), 400 if error else 200
 
 

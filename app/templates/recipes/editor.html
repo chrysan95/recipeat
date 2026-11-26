@@ -74,7 +74,7 @@
 
     <fieldset><legend>Referensi visual</legend>
       <div class="field mt-4"><label for="video">Link video panduan (opsional)</label><input id="video" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=…" value="{{ v.video_url or '' }}"></div>
-      <div class="upload">
+      <div class="upload" data-file-box>
         {% if v.image_url %}<img class="media-img ph--round" src="{{ v.image_url }}" alt="Foto saat ini" data-file-preview referrerpolicy="no-referrer">{% else %}<div class="ph ph--round" data-file-preview><span>Foto resep</span></div>{% endif %}
         <div class="upload__info">
           <p><b>Foto hidangan</b> <span class="muted">JPG/PNG/WEBP, maks 3 MB</span></p>

@@ -1,4 +1,4 @@
-"""Login helpers: user loading and role checks (throttle lives in redis_store)."""
+"""Login helpers: user loading and role checks (throttle lives in redis_store)"""
 from functools import wraps
 
 from flask import jsonify, redirect, render_template, request, session, url_for
@@ -25,6 +25,14 @@ def unauthorized():
     if request.method == "GET":
         session["return_to"] = request.full_path.rstrip("?")
     return redirect(url_for("auth.login"))
+
+
+ROLE_HOME = {"admin": "/admin/bahan", "sponsor": "/resep"}
+
+
+def home_for(user):
+    """Start page per role: users get Home; admins land on ingredient verification; sponsors on their recipes."""
+    return ROLE_HOME.get(getattr(user, "role", None), "/")
 
 
 def role_required(*roles):

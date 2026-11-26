@@ -88,6 +88,8 @@ def password():
 
 @bp.route("/preferensi", methods=["GET", "POST"])
 def preferences():
+    if current_user.role != "user":  # food preferences only matter for regular users
+        return redirect("/profil")
     valid_ids = {i["id"] for i in approved_ingredients()}
     if request.method == "POST":
         def pick(key, allowed):

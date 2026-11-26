@@ -1,7 +1,9 @@
+import hashlib
 import os
+from functools import lru_cache
 
 from dotenv import load_dotenv
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from flask_wtf.csrf import CSRFError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -15,7 +17,7 @@ load_dotenv()
 
 
 def create_app(overrides=None):
-    # Static files live in public/static: Vercel serves public/** from its CDN; Flask serves them locally
+    # Static files live in public/static: Vercel serves public/** from its CDN; Flask serves them locally.
     app = Flask(__name__, static_folder=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public", "static"))
     app.config.from_object(Config)
     if overrides:
@@ -34,7 +36,7 @@ def create_app(overrides=None):
     login_manager.init_app(app)
 
     from . import models  # noqa: F401  (register tables for migrations)
-    from . import auth_utils  # noqa: F401  (user loader)
+    from .auth_utils import home_for  # also registers the user loader
     from .blueprints import auth, editor, media, profile, racik, recipes, roles
     from .seed import register_commands
 
@@ -48,7 +50,17 @@ def create_app(overrides=None):
 
     register_commands(app)
 
-    app.jinja_env.globals.update(icon=icon, solid_icon=solid_icon, **TEMPLATE_HELPERS)
+    from .photo_credits import credit_for
+    @lru_cache(maxsize=None)
+    def asset(filename):
+        """Static URL with a content hash (?v=…) so browsers/CDN can cache files for a year and still get new versions."""
+        try:
+            with open(os.path.join(app.static_folder, filename), "rb") as f:
+                return url_for("static", filename=filename, v=hashlib.md5(f.read()).hexdigest()[:10])
+        except FileNotFoundError:
+            return url_for("static", filename=filename)
+
+    app.jinja_env.globals.update(icon=icon, solid_icon=solid_icon, home_for=home_for, credit_for=credit_for, asset=asset, **TEMPLATE_HELPERS)
 
     @app.after_request
     def security_headers(resp):
@@ -65,11 +77,6 @@ def create_app(overrides=None):
         db.session.execute(sql("SELECT 1"))
         app.extensions["redis"].ping()
         return {"ok": True, "db": "postgresql", "cache": "redis"}
-
-    @app.get("/kredit-foto")
-    def photo_credits():
-        from .photo_credits import credits
-        return render_template("credits.html", title="Kredit Foto", photos=credits())
 
     @app.errorhandler(429)
     def rate_limited(e):

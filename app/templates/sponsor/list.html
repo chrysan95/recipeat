@@ -1,28 +1,30 @@
-{% extends "partials/_profile_layout.html" %}
+{% extends "base.html" %}
 {% from "partials/_macros.html" import csrf, flashes %}
-{% block panel %}
-<section class="panel">
-  <div class="panel__head"><h1 class="panel__title">Kelola Promosi</h1><a class="btn" href="/sponsor/promosi/baru">{{ icon('plus') }} Promosi baru</a></div>
-  <p class="panel__sub">Promosi aktif tampil di beranda dan bisa dikirim sebagai notifikasi ke semua pengguna.</p>
-  {{ flashes() }}
-  <div class="table-wrap mt-4">
-    <table class="table">
+{% block content %}
+<main class="container page">
+  <div class="section-head" style="align-items:center">
+    <h1 class="h1">Kelola Promosi</h1>
+    <a class="btn" href="/sponsor/promosi/baru">{{ icon('plus') }} Promosi Baru</a>
+  </div>
+  <div class="mt-3">{{ flashes() }}</div>
+  <div class="table-wrap mt-3">
+    <table class="table table--plain">
       <thead><tr><th>Promosi</th><th>Periode</th><th>Status</th><th>Notifikasi</th><th><span class="sr-only">Aksi</span></th></tr></thead>
       <tbody>
         {% for p in promos %}{% set live = p.active and p.starts_on <= today and (not p.ends_on or today <= p.ends_on) %}
           <tr>
-            <td><b>{{ p.title }}</b><small>{{ p.brand }}</small></td>
-            <td>{{ format_date(p.starts_on) }}<small>s.d. {{ format_date(p.ends_on) if p.ends_on else 'tanpa batas' }}</small></td>
-            <td><span class="badge badge--{{ 'approved' if live else ('pending' if p.active else 'rejected') }}">{{ 'Tayang' if live else ('Terjadwal/selesai' if p.active else 'Nonaktif') }}</span></td>
-            <td>{{ p.sent }}×</td>
-            <td><div class="row" style="justify-content:flex-end;gap:var(--s1)">
-              <a class="btn btn--outline btn--sm" href="/sponsor/promosi/{{ p.id }}">Ubah</a>
-              <form method="post" action="/sponsor/promosi/{{ p.id }}">{{ csrf() }}<button class="btn btn--sm btn--light" name="action" value="toggle">{{ 'Nonaktifkan' if p.active else 'Aktifkan' }}</button></form>
+            <td><b>{{ p.title }}</b><br>{{ p.brand }}</td>
+            <td>{{ format_date(p.starts_on) }}<br>s.d. {{ format_date(p.ends_on) if p.ends_on else 'tanpa batas' }}</td>
+            <td><span class="pill pill--{{ 'approved' if live else ('pending' if p.active else 'rejected') }}">{{ 'Tayang' if live else ('Terjadwal' if p.active and p.starts_on > today else ('Selesai' if p.active else 'Nonaktif')) }}</span></td>
+            <td>{{ p.sent }}x</td>
+            <td><div class="row-actions">
+              <a class="btn btn--outline" href="/sponsor/promosi/{{ p.id }}">Ubah</a>
+              <form method="post" action="/sponsor/promosi/{{ p.id }}">{{ csrf() }}<button class="btn btn--light" name="action" value="toggle">{{ 'Nonaktifkan' if p.active else 'Aktifkan' }}</button></form>
             </div></td>
           </tr>
-        {% else %}<tr><td colspan="5" class="muted">Belum ada promosi.</td></tr>{% endfor %}
+        {% else %}<tr><td colspan="5" class="muted">Belum ada promosi. Buat yang pertama lewat <b>Promosi Baru</b>.</td></tr>{% endfor %}
       </tbody>
     </table>
   </div>
-</section>
+</main>
 {% endblock %}

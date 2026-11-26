@@ -20,7 +20,7 @@
     {{ basket_button() }}
   </div>
 
-  <h1 class="sr-only">Racik — pilih bahan {{ current.name }}</h1>
+  <h1 class="sr-only">Racik, pilih bahan {{ current.name }}</h1>
   <div class="ing-grid" style="margin-top:var(--s6)">
     {% for i in all if i.category == current.slug %}{{ pick_button(i) }}{% endfor %}
   </div>
@@ -44,4 +44,4 @@
 </main>
 {{ basket([], 'pick') }}
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/racik.js') }}" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ asset('js/racik.js') }}" defer></script>{% endblock %}

@@ -42,3 +42,22 @@ def test_sponsor_link_must_be_internal_or_https(new_client):
     c = new_client()
     c.login("sponsor@dapurnusa.id", "Sponsor#2026")
     assert c.post("/sponsor/promosi/baru", {"brand": "X", "title": "Bad link", "cta_url": "javascript:alert(1)", "starts_on": "2026-01-01"}).status_code == 400
+
+
+def test_admin_and_sponsor_get_their_own_workspace(new_client):
+    a = new_client()
+    a.login("admin@recipeat.id", "Admin#2026")
+    assert a.c.get("/").headers["Location"].endswith("/admin/bahan")
+    assert a.c.get("/resep").headers["Location"].endswith("/admin/bahan")
+    assert a.c.get("/profil/preferensi").headers["Location"].endswith("/profil")
+    nav = a.c.get("/admin/bahan").get_data(as_text=True)
+    assert 'href="/racik"' not in nav and "Riwayat Bahan" in nav
+    s = new_client()
+    s.login("sponsor@dapurnusa.id", "Sponsor#2026")
+    assert s.c.get("/").headers["Location"].endswith("/resep")
+    assert s.c.get("/notifikasi").headers["Location"].endswith("/sponsor/promosi")
+    lib = s.c.get("/resep").get_data(as_text=True)
+    assert "Ajukan bahan baru" in lib and "Resep Tersimpan" not in lib
+    profile = s.c.get("/profil").get_data(as_text=True)
+    assert "Preferensi Makanan" not in profile and "Ganti Kata Sandi" in profile
+    assert s.c.get("/kredit-foto").status_code == 404

@@ -3,7 +3,7 @@
 {% set hide_nav = true %}
 {% block content %}
 <main class="auth">
-  <div class="auth__art"><img src="{{ url_for('static', filename='img/logo@2x.png') }}" alt="Recipeat" width="1200" height="639"></div>
+  <div class="auth__art"><img src="{{ asset('img/logo@2x.webp') }}" alt="Recipeat" width="1200" height="639"></div>
   <div class="auth__form">
     <form method="post" action="/daftar" novalidate>
       {{ csrf() }}

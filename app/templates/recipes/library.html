@@ -3,6 +3,8 @@
 {% block content %}
 <main class="container page">
   {{ flashes() }}
+  {% set is_user = current_user.role == 'user' %}
+  {% if is_user %}
   <div class="section-head">
     <h1 class="h1">Resep Tersimpan</h1>
     <a class="link-more" href="/resep/tersimpan">Lihat Semua {{ icon('chevronRight', size=16) }}</a>
@@ -10,9 +12,13 @@
   <div class="grid-cards mt-4">{% for r in saved %}{{ recipe_card(r) }}{% endfor %}</div>
   {% if not saved %}<div class="empty mt-4">Belum ada resep tersimpan. Tekan ikon {{ icon('bookmark', size=16) }} pada resep untuk menyimpannya.</div>{% endif %}
 
-  <div class="section-head section" style="align-items:center">
+  {% endif %}
+  <div class="section-head {{ 'section' if is_user }}" style="align-items:center">
     <h2 class="h2 row" style="gap:var(--s1)">{{ icon('chef', size=32) }} Resep Anda</h2>
-    <a class="btn" href="/resep/baru">{{ icon('plus') }} Tambah baru</a>
+    <div class="row">
+      {% if not is_user %}<a class="btn btn--light" href="/bahan/ajukan">{{ icon('plus') }} Ajukan bahan baru</a>{% endif %}
+      <a class="btn" href="/resep/baru">{{ icon('plus') }} Tambah baru</a>
+    </div>
   </div>
   <div class="section-head mt-3">
     <span class="muted"><b>Terakhir diubah</b></span>
@@ -33,4 +39,4 @@
   </div>
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ asset('js/recipe.js') }}" defer></script>{% endblock %}

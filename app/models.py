@@ -1,6 +1,8 @@
-"""PostgreSQL data model. Mirrors the use-case diagram:
+"""PostgreSQL data model
+Mirrors the use-case diagram:
 User: search/concoct/read/add recipe, request ingredient, personalise preference, log in, sign up
-Admin: verify ingredient · Sponsor: manage promotion
+Admin: verify ingredient
+Sponsor: manage promotion
 """
 from flask_login import UserMixin
 from sqlalchemy import CheckConstraint, Index, UniqueConstraint, func, text
@@ -70,7 +72,7 @@ class Ingredient(db.Model):
     is_halal = db.Column(db.Boolean, nullable=False, server_default=text("true"))
     popularity = db.Column(db.Integer, nullable=False, server_default="0")
     status = db.Column(db.String(10), nullable=False, server_default="approved")
-    requested_by = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"))
+    requested_by = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"), index=True)
     request_note = db.Column(db.String(300))
     reviewed_by = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"))
     reviewed_at = db.Column(TS)
@@ -125,7 +127,7 @@ class Recipe(db.Model):
 class RecipeTag(db.Model):
     __tablename__ = "recipe_tags"
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="CASCADE"), primary_key=True)
-    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True, index=True)
 
 
 class RecipeIngredient(db.Model):
@@ -153,7 +155,7 @@ class RecipeStep(db.Model):
 class Bookmark(db.Model):
     __tablename__ = "bookmarks"
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="CASCADE"), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="CASCADE"), primary_key=True, index=True)
     created_at = db.Column(TS, nullable=False, server_default=func.now())
 
 
@@ -198,7 +200,7 @@ class Notification(db.Model):
     body = db.Column(db.String(300), nullable=False, server_default="")
     link = db.Column(db.String(500))
     recipe_ids = db.Column(ARRAY(db.Integer), nullable=False, server_default="{}")
-    promotion_id = db.Column(db.Integer, db.ForeignKey("promotions.id", ondelete="CASCADE"))
+    promotion_id = db.Column(db.Integer, db.ForeignKey("promotions.id", ondelete="CASCADE"), index=True)
     created_at = db.Column(TS, nullable=False, server_default=func.now())
     __table_args__ = (Index("ix_notifications_user", "user_id", "created_at"),)
 

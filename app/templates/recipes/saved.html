@@ -17,4 +17,4 @@
   {% if not recipes %}<div class="empty mt-4">Tidak ada resep tersimpan yang cocok.</div>{% endif %}
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ asset('js/recipe.js') }}" defer></script>{% endblock %}

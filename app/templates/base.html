@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if title %}{{ title }} · {% endif %}Recipeat</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/weblogo.png') }}">
+  <link rel="icon" type="image/png" href="{{ asset('img/weblogo.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {# Two weights only: Regular 400 and Bold 700 (+ their italics) #}
   <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script>
-    // Photo failed to load (offline, removed from Commons…) → swap in the named placeholder
+    // Photo failed to load (offline, removed from Commons…) → swap in the named placeholder.
     window.phFallback = function (img) {
       var d = document.createElement('div'), s = document.createElement('span');
       d.className = 'ph ' + img.className.replace('media-img', '');
@@ -25,12 +25,9 @@
 {% block body %}
   {% if not hide_nav %}{% include "partials/_nav.html" %}{% endif %}
   {% block content %}{% endblock %}
-  {% if not hide_nav %}
-    <footer class="site-footer"><div class="container">© Recipeat · Foto hidangan dari Wikimedia Commons — <a href="/kredit-foto">kredit &amp; lisensi foto</a></div></footer>
-  {% endif %}
 {% endblock %}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

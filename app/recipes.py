@@ -1,4 +1,4 @@
-"""Recipe queries (PostgreSQL) shared by blueprints."""
+"""Recipe queries (PostgreSQL) shared by blueprints"""
 from sqlalchemy import bindparam, text
 
 from .extensions import db
@@ -10,27 +10,32 @@ SORTS = {
     "tercepat": "total_minutes ASC",
     "termurah": "COALESCE(r.price_min, 2147483647) ASC",
     "terbaru": "r.created_at DESC",
+    "diubah": "r.updated_at DESC",
 }
 SORT_LABELS = {"populer": "Terpopuler", "rating": "Rating tertinggi", "tercepat": "Tercepat", "termurah": "Termurah", "terbaru": "Terbaru"}
 
+# Ratings and bookmark counts are aggregated once per query (grouped joins) instead of per row.
 BASE_SELECT = """
   SELECT r.id, r.title, r.description, r.origin, r.image_url, r.video_url, r.prep_minutes, r.cook_minutes,
          (r.prep_minutes + r.cook_minutes) AS total_minutes, r.price_min, r.price_max, r.servings, r.status,
          r.author_id, r.created_at, r.updated_at,
-         COALESCE((SELECT ROUND(AVG(rating)::numeric, 1)::float FROM reviews WHERE recipe_id = r.id), 0) AS rating,
-         (SELECT COUNT(*) FROM reviews WHERE recipe_id = r.id) AS review_count,
-         (SELECT COUNT(*) FROM bookmarks WHERE recipe_id = r.id) AS bookmark_count,
-         EXISTS (SELECT 1 FROM bookmarks WHERE recipe_id = r.id AND user_id = :uid) AS bookmarked
-  FROM recipes r"""
+         COALESCE(rv.rating, 0) AS rating, COALESCE(rv.review_count, 0) AS review_count,
+         COALESCE(bm.bookmark_count, 0) AS bookmark_count, mine.recipe_id IS NOT NULL AS bookmarked
+  FROM recipes r
+  LEFT JOIN (SELECT recipe_id, ROUND(AVG(rating)::numeric, 1)::float AS rating, COUNT(*) AS review_count
+             FROM reviews GROUP BY recipe_id) rv ON rv.recipe_id = r.id
+  LEFT JOIN (SELECT recipe_id, COUNT(*) AS bookmark_count FROM bookmarks GROUP BY recipe_id) bm ON bm.recipe_id = r.id
+  LEFT JOIN bookmarks mine ON mine.recipe_id = r.id AND mine.user_id = :uid"""
 
 
 def _ing_clause(cond):
     return f"NOT EXISTS (SELECT 1 FROM recipe_ingredients ri JOIN ingredients i ON i.id = ri.ingredient_id WHERE ri.recipe_id = r.id AND {cond})"
 
 
-def list_recipes(user_id=0, q=None, tags=(), sort="populer", ids=None, author_id=None, bookmarked_only=False, avoid=None, limit=None):
+def list_recipes(user_id=0, q=None, tags=(), sort="populer", ids=None, author_id=None, bookmarked_only=False, avoid=None, limit=None,
+                 include_drafts=False):
     """avoid = {'ingredient_ids': [...], 'vegan': bool, 'vegetarian': bool, 'halal': bool}"""
-    where = ["r.status = 'published'"]
+    where = ["TRUE" if include_drafts else "r.status = 'published'"]
     p = {"uid": user_id or 0}
     expanding = []
     if q:
@@ -47,7 +52,7 @@ def list_recipes(user_id=0, q=None, tags=(), sort="populer", ids=None, author_id
         where.append("r.author_id = :author")
         p["author"] = author_id
     if bookmarked_only:
-        where.append("EXISTS (SELECT 1 FROM bookmarks WHERE recipe_id = r.id AND user_id = :uid)")
+        where.append("mine.recipe_id IS NOT NULL")
     if avoid:
         if avoid.get("ingredient_ids"):
             where.append(_ing_clause("i.id IN :avoid_ids"))
@@ -68,23 +73,28 @@ def list_recipes(user_id=0, q=None, tags=(), sort="populer", ids=None, author_id
     return [dict(r) for r in db.session.execute(stmt, p).mappings()]
 
 
+# One round trip for the whole recipe page: author, tags, ingredients and steps come back as JSON arrays.
+DETAIL_SELECT = f"""
+  SELECT b.*, json_build_object('id', u.id, 'name', u.name) AS author,
+    COALESCE((SELECT json_agg(json_build_object('id', t.id, 'name', t.name, 'slug', t.slug, 'kind', t.kind) ORDER BY t.kind, t.id)
+              FROM recipe_tags rt JOIN tags t ON t.id = rt.tag_id WHERE rt.recipe_id = b.id), '[]') AS tags,
+    COALESCE((SELECT json_agg(json_build_object('id', ri.id, 'quantity', ri.quantity, 'unit', ri.unit, 'note', ri.note,
+                'ingredient_id', i.id, 'name', i.name, 'image_url', i.image_url, 'is_vegan', i.is_vegan,
+                'is_vegetarian', i.is_vegetarian, 'is_halal', i.is_halal) ORDER BY ri.position)
+              FROM recipe_ingredients ri JOIN ingredients i ON i.id = ri.ingredient_id WHERE ri.recipe_id = b.id), '[]') AS ingredients,
+    COALESCE((SELECT json_agg(json_build_object('position', st.position, 'title', st.title, 'body', st.body, 'media_url', st.media_url)
+              ORDER BY st.position) FROM recipe_steps st WHERE st.recipe_id = b.id), '[]') AS steps
+  FROM ({BASE_SELECT} WHERE r.id = :id) b JOIN users u ON u.id = b.author_id"""
+
+
 def get_recipe(recipe_id, user_id=0):
-    s = db.session
-    row = s.execute(text(f"{BASE_SELECT} WHERE r.id = :id"), {"id": recipe_id, "uid": user_id or 0}).mappings().first()
+    row = db.session.execute(text(DETAIL_SELECT), {"id": recipe_id, "uid": user_id or 0}).mappings().first()
     if not row:
         return None
     r = dict(row)
-    r["author"] = dict(s.execute(text("SELECT id, name FROM users WHERE id = :id"), {"id": r["author_id"]}).mappings().one())
-    r["tags"] = [dict(x) for x in s.execute(text(
-        "SELECT t.id, t.name, t.slug, t.kind FROM recipe_tags rt JOIN tags t ON t.id = rt.tag_id WHERE rt.recipe_id = :id ORDER BY t.kind, t.id"), {"id": r["id"]}).mappings()]
-    r["ingredients"] = [dict(x) for x in s.execute(text("""
-        SELECT ri.id, ri.quantity, ri.unit, ri.note, i.id AS ingredient_id, i.name, i.image_url, i.is_vegan, i.is_vegetarian, i.is_halal
-        FROM recipe_ingredients ri JOIN ingredients i ON i.id = ri.ingredient_id WHERE ri.recipe_id = :id ORDER BY ri.position"""), {"id": r["id"]}).mappings()]
-    r["steps"] = [dict(x) for x in s.execute(text(
-        "SELECT position, title, body, media_url FROM recipe_steps WHERE recipe_id = :id ORDER BY position"), {"id": r["id"]}).mappings()]
-    r["reviews"] = [dict(x) for x in s.execute(text("""
+    r["reviews"] = [dict(x) for x in db.session.execute(text("""
         SELECT rv.rating, rv.comment, rv.created_at, rv.user_id, u.name FROM reviews rv JOIN users u ON u.id = rv.user_id
-        WHERE rv.recipe_id = :id ORDER BY rv.created_at DESC"""), {"id": r["id"]}).mappings()]
+        WHERE rv.recipe_id = :id ORDER BY rv.created_at DESC"""), {"id": recipe_id}).mappings()]
     return r
 
 

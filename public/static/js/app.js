@@ -10,7 +10,7 @@
   };
   window.csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
-  // Password visibility: hidden by default with an open eye; click → text shown + closed eye
+  // Password visibility: hidden by default with an open eye; click → text shown + closed eye.
   document.querySelectorAll('[data-toggle-password]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const input = document.getElementById(btn.dataset.togglePassword);
@@ -22,12 +22,13 @@
     });
   });
 
-  // Custom file buttons: show the chosen file name + a preview
+  // Custom file buttons: show the chosen file name (if there's a slot for it) and preview the picture
   document.querySelectorAll('[data-file]').forEach((input) => input.addEventListener('change', () => {
-    const box = input.closest('.upload');
+    const box = input.closest('[data-file-box]');
     const file = input.files[0];
-    box.querySelector('[data-file-name]').textContent = file ? file.name : 'Belum ada file dipilih';
-    const prev = box.querySelector('[data-file-preview]');
+    const name = box.querySelector('[data-file-name]');
+    if (name) name.textContent = file ? file.name : 'Belum ada file dipilih';
+    const prev = box.querySelector('[data-file-preview]') || box.firstElementChild;
     if (file && prev && file.type.startsWith('image/')) {
       const img = document.createElement('img');
       img.className = 'media-img ph--round'; img.alt = 'Pratinjau foto'; img.dataset.filePreview = '';

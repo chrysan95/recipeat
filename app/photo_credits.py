@@ -1,15 +1,14 @@
-"""Real food photos for the dummy data, hot-linked from Wikimedia Commons (free licences, no AI images)
+"""Real food photos for the dummy data
 
-Images are served by Commons through Special:FilePath (it redirects to a resized thumbnail), so nothing is
-copied into the repo. Every photo is credited on /kredit-foto and in CREDITS.md; the file page on Commons
-holds the full author/licence details. If a photo ever fails to load, the named placeholder is shown instead
+Images are served by Commons through Special:FilePath (it redirects to a resized thumbnail), so nothing is copied into the repo
+If a photo fails to load, the named placeholder is shown instead
 """
 from urllib.parse import quote
 
 COMMONS = "https://commons.wikimedia.org/wiki/"
 SEE_FILE = "Lihat halaman berkas"
 
-# recipe title → (Commons file name, author, licence)
+# recipe title, (Commons file name, author, licence)
 RECIPE_PHOTOS = {
     "Nasi Goreng": ("Nasi_Goreng_Udang_Istimewa.JPG", "Gunawan Kartapranata", SEE_FILE),
     "Soto Mie": ("Soto_Mie_Bogor_1.JPG", "Gunawan Kartapranata", SEE_FILE),
@@ -26,11 +25,11 @@ RECIPE_PHOTOS = {
     "Tumis Kangkung": ("Tumis_kangkung.JPG", "Midori", "GFDL / CC BY-SA 2.1 JP"),
     "Es Teler": ("Es_teler_di_Bandung.jpg", SEE_FILE, SEE_FILE),
     "Gado-Gado": ("Gado-gado_in_Jakarta.JPG", SEE_FILE, SEE_FILE),
-    # "Babi Kecap": no free photo found → keeps its named placeholder
+    # "Babi Kecap": no free photo found, keeps its named placeholder
 }
 
-# ingredient name → (Commons file name, author, licence). Ingredients without an entry keep a named
-# placeholder until an admin approves one with a photo (Request New Ingredient → Verify Ingredient).
+# ingredient name, (Commons file name, author, licence). Ingredients without an entry keep a named
+# placeholder until an admin approves one with a photo (Request New Ingredient, Verify Ingredient).
 INGREDIENT_PHOTOS = {
     "Bawang Merah": ("Shallots-Whole.jpg", "Evan-Amos", "CC BY-SA 3.0"),
     "Bawang Bombay": ("Onion_on_White.JPG", "Colin", "CC BY-SA (lihat halaman berkas)"),
@@ -40,10 +39,6 @@ INGREDIENT_PHOTOS = {
 
 def file_url(file_name, width=640):
     return f"{COMMONS}Special:FilePath/{quote(file_name)}?width={width}"
-
-
-def page_url(file_name):
-    return f"{COMMONS}File:{quote(file_name)}"
 
 
 def recipe_image(title):
@@ -56,6 +51,13 @@ def ingredient_image(name):
     return file_url(hit[0], 320) if hit else None
 
 
-def credits():
-    rows = [("Resep", t, *v) for t, v in RECIPE_PHOTOS.items()] + [("Bahan", n, *v) for n, v in INGREDIENT_PHOTOS.items()]
-    return [dict(kind=k, subject=s, file=f, author=a, license=lic, image=file_url(f, 160), page=page_url(f)) for k, s, f, a, lic in rows]
+_BY_URL_PREFIX = {f"{COMMONS}Special:FilePath/{quote(f)}": (a, lic) for f, a, lic in
+                  list(RECIPE_PHOTOS.values()) + list(INGREDIENT_PHOTOS.values())}
+
+
+def credit_for(url):
+    """Tooltip text for a Commons photo, e.g. 'Foto: Malikpb · CC BY-SA 4.0 · Wikimedia Commons'; '' for uploads."""
+    if not url or not url.startswith(COMMONS):
+        return ""
+    author, lic = _BY_URL_PREFIX.get(url.split("?")[0], (SEE_FILE, SEE_FILE))
+    return f"Foto: {author} · {lic} · Wikimedia Commons"

@@ -10,7 +10,7 @@ from ..auth_utils import role_required
 from ..extensions import db
 from ..recipes import list_recipes
 from ..redis_store import cache_clear
-from ..uploads import remove_upload
+from ..uploads import UploadError, remove_upload, save_image
 
 bp = Blueprint("roles", __name__)
 LINK_RE = re.compile(r"^(/(?!/)\S*|https://\S+)$")
@@ -29,11 +29,13 @@ def admin_ingredients():
     pending = s.execute(text("""SELECT i.*, c.name AS category, u.name AS requester FROM ingredients i
         JOIN ingredient_categories c ON c.id = i.category_id LEFT JOIN users u ON u.id = i.requested_by
         WHERE i.status = 'pending' ORDER BY i.created_at""")).mappings().all()
-    reviewed = s.execute(text("""SELECT i.name, i.status, i.review_note, u.name AS requester FROM ingredients i
-        LEFT JOIN users u ON u.id = i.requested_by WHERE i.requested_by IS NOT NULL AND i.status <> 'pending'
-        ORDER BY i.reviewed_at DESC NULLS LAST LIMIT 20""")).mappings().all()
+    show_all = request.args.get("semua") == "1"
+    history = s.execute(text("""SELECT i.name, i.status, i.review_note, u.name AS requester FROM ingredients i
+        LEFT JOIN users u ON u.id = i.requested_by WHERE i.requested_by IS NOT NULL
+        ORDER BY i.created_at DESC""" + ("" if show_all else " LIMIT 10"))).mappings().all()
     cats = s.execute(text("SELECT id, name FROM ingredient_categories ORDER BY position")).mappings().all()
-    return render_template("admin/ingredients.html", title="Verifikasi Bahan", section="admin", pending=pending, reviewed=reviewed, cats=cats)
+    return render_template("admin/ingredients.html", title="Verifikasi Bahan", active="resep", pending=pending, history=history,
+                           cats=cats, show_all=show_all)
 
 
 @bp.post("/admin/bahan/<int:ing_id>")
@@ -57,14 +59,21 @@ def admin_decide(ing_id):
         if s.execute(text("SELECT 1 FROM ingredients WHERE lower(name) = lower(:n) AND status = 'approved'"), {"n": name}).first():
             flash(f'"{name}" sudah ada. Tolak pengajuan ini sebagai duplikat.', "error")
             return redirect("/admin/bahan")
+        try:  # the admin may replace the requester's photo (pencil on the photo)
+            new_photo = save_image(request.files.get("photo"))
+        except UploadError as e:
+            flash(str(e), "error")
+            return redirect("/admin/bahan")
         vegan = bool(request.form.get("is_vegan"))
         s.execute(text("""UPDATE ingredients SET name = :n, category_id = :c, is_vegan = :v, is_vegetarian = :vg, is_halal = :h,
-            status = 'approved', reviewed_by = :a, reviewed_at = now(), review_note = NULL WHERE id = :id"""),
+            image_url = COALESCE(:img, image_url), status = 'approved', reviewed_by = :a, reviewed_at = now(), review_note = NULL WHERE id = :id"""),
                   {"n": name, "c": category_id, "v": vegan, "vg": vegan or bool(request.form.get("is_vegetarian")),
-                   "h": bool(request.form.get("is_halal")), "a": current_user.id, "id": ing_id})
+                   "h": bool(request.form.get("is_halal")), "img": new_photo, "a": current_user.id, "id": ing_id})
         if ing["requested_by"]:
             notify(ing["requested_by"], f'Bahan "{name}" disetujui', "Bahan ajuanmu sekarang bisa dipakai di Racik dan resep.", "/racik")
         s.commit()
+        if new_photo:
+            remove_upload(ing["image_url"])
         cache_clear("ingredients")
         flash(f'"{name}" disetujui.', "ok")
     elif action == "reject":
@@ -114,7 +123,7 @@ def validate_promo(v):
 
 def promo_form(v, error=None):
     recipes = list_recipes(user_id=current_user.id, sort="populer")
-    return render_template("sponsor/form.html", title="Ubah Promosi" if v.get("id") else "Promosi Baru", section="sponsor",
+    return render_template("sponsor/form.html", title="Ubah Promosi" if v.get("id") else "Promosi Baru", active="notifikasi",
                            v=v, recipes=recipes, error=error), 400 if error else 200
 
 
@@ -149,7 +158,7 @@ def promos():
     rows = db.session.execute(text("""SELECT p.*, (SELECT COUNT(*) FROM notifications n WHERE n.promotion_id = p.id) AS sent
         FROM promotions p WHERE p.sponsor_id = :u OR :role = 'admin' ORDER BY p.created_at DESC"""),
                               {"u": current_user.id, "role": current_user.role}).mappings().all()
-    return render_template("sponsor/list.html", title="Kelola Promosi", section="sponsor", promos=rows, today=date.today())
+    return render_template("sponsor/list.html", title="Kelola Promosi", active="notifikasi", promos=rows, today=date.today())
 
 
 @bp.route("/sponsor/promosi/baru", methods=["GET", "POST"])
@@ -194,14 +203,16 @@ def promo_edit(promo_id):
 @bp.get("/notifikasi")
 @login_required
 def notifications():
+    if current_user.role == "sponsor":  # a sponsor's bell tab is where they manage promotions
+        return redirect("/sponsor/promosi")
     rows = db.session.execute(text("""SELECT n.* FROM notifications n LEFT JOIN promotions p ON p.id = n.promotion_id
         WHERE (n.user_id = :u OR n.user_id IS NULL) AND (n.promotion_id IS NULL OR p.active)
         ORDER BY n.created_at DESC LIMIT 50"""), {"u": current_user.id}).mappings().all()
-    items = []
-    for n in rows:
-        n = dict(n)
-        n["recipes"] = list_recipes(user_id=current_user.id, ids=n["recipe_ids"]) if n["recipe_ids"] else []
-        items.append(n)
+    items = [dict(n) for n in rows]
+    wanted = {i for n in items for i in (n["recipe_ids"] or [])}
+    by_id = {r["id"]: r for r in list_recipes(user_id=current_user.id, ids=wanted)} if wanted else {}
+    for n in items:
+        n["recipes"] = [by_id[i] for i in (n["recipe_ids"] or []) if i in by_id]
     today = date.today()
     groups = [("Hari ini", [n for n in items if n["created_at"].date() == today]), ("Sebelumnya", [n for n in items if n["created_at"].date() != today])]
     return render_template("notifications.html", title="Notifikasi", active="notifikasi", groups=groups)

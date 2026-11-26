@@ -3,7 +3,7 @@
 {% set hide_nav = true %}
 {% block content %}
 <main class="container page">
-  <a class="back-link" href="/"><span class="back-btn">{{ icon('arrowLeft') }}</span> Kembali ke halaman utama</a>
+  <a class="back-link" href="{{ home_for(current_user) }}"><span class="back-btn">{{ icon('arrowLeft') }}</span> Kembali ke halaman utama</a>
   <div class="panel-wrap">
     <aside class="sidebar">
       <form class="avatar-edit" method="post" action="/profil/foto" enctype="multipart/form-data">
@@ -21,10 +21,7 @@
       <nav aria-label="Menu profil">
         <a href="/profil" class="{{ 'is-active' if section == 'akun' }}">Informasi Akun</a>
         <a href="/profil/kata-sandi" class="{{ 'is-active' if section == 'sandi' }}">Ganti Kata Sandi</a>
-        <a href="/profil/preferensi" class="{{ 'is-active' if section == 'preferensi' }}">Preferensi Makanan</a>
-        <a href="/bahan/ajukan">Pengajuan Bahan</a>
-        {% if current_user.role == 'admin' %}<a href="/admin/bahan" class="{{ 'is-active' if section == 'admin' }}">Verifikasi Bahan</a>{% endif %}
-        {% if current_user.role in ('sponsor', 'admin') %}<a href="/sponsor/promosi" class="{{ 'is-active' if section == 'sponsor' }}">Kelola Promosi</a>{% endif %}
+        {% if current_user.role == 'user' %}<a href="/profil/preferensi" class="{{ 'is-active' if section == 'preferensi' }}">Preferensi Makanan</a>{% endif %}
         <hr>
         <button type="button" class="sidebar__logout" data-open="logout-modal">{{ icon('logout') }} Keluar</button>
       </nav>

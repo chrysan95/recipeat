@@ -17,6 +17,6 @@
 {{ basket_panel(basket, "results") }}
 {% endblock %}
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/racik.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>
+<script src="{{ asset('js/racik.js') }}" defer></script>
+<script src="{{ asset('js/recipe.js') }}" defer></script>
 {% endblock %}

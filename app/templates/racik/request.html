@@ -2,7 +2,7 @@
 {% from "partials/_macros.html" import flashes, error_box, csrf %}
 {% block content %}
 <main class="container page">
-  <div class="page-head"><div class="page-head__title"><a class="back-btn" href="/racik" aria-label="Kembali">{{ icon('arrowLeft') }}</a><h1 class="h1">Ajukan Bahan Baru</h1></div></div>
+  <div class="page-head"><div class="page-head__title"><a class="back-btn" href="{{ back }}" aria-label="Kembali">{{ icon('arrowLeft') }}</a><h1 class="h1">Ajukan Bahan Baru</h1></div></div>
   <div class="grid-2 mt-4" style="align-items:start">
     <form class="panel" method="post" action="/bahan/ajukan" enctype="multipart/form-data">
       {{ csrf() }}
@@ -16,7 +16,7 @@
             {% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if values.category_id == c.id }}>{{ c.name }}</option>{% endfor %}</select></div>
         <div class="field"><label for="note">Keterangan (opsional)</label><textarea id="note" name="note" maxlength="300" placeholder="Dipakai untuk masakan apa? Nama lain?">{{ values.note or '' }}</textarea></div>
       </div>
-      <div class="upload">
+      <div class="upload" data-file-box>
         <div class="ph ph--round" data-file-preview><span>Foto bahan</span></div>
         <div class="upload__info">
           <p><b>Foto bahan *</b> <span class="muted">JPG/PNG/WEBP, maks 3 MB</span></p>
@@ -35,7 +35,7 @@
           <tbody>
             {% for m in mine %}
               <tr><td><b>{{ m.name }}</b><small>{{ time_ago(m.created_at) }}</small></td><td>{{ m.category }}</td>
-                <td><span class="badge badge--{{ m.status }}">{{ {'pending': 'Menunggu', 'approved': 'Disetujui', 'rejected': 'Ditolak'}[m.status] }}</span>
+                <td><span class="pill pill--sm pill--{{ m.status }}">{{ {'pending': 'Menunggu', 'approved': 'Disetujui', 'rejected': 'Ditolak'}[m.status] }}</span>
                   {% if m.review_note %}<small>{{ m.review_note }}</small>{% endif %}</td></tr>
             {% else %}<tr><td colspan="3" class="muted">Belum ada pengajuan.</td></tr>{% endfor %}
           </tbody>

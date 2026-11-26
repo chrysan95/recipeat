@@ -1,12 +1,16 @@
-{% set nav_items = [
-  ('home', '/', 'home', 'Home'),
-  ('racik', '/racik', 'pot', 'Racik'),
-  ('resep', '/resep', 'book', 'Resep'),
-  ('notifikasi', '/notifikasi', 'bell', 'Notifikasi'),
-] %}
+{# Users get four tabs; admins and sponsors only Resep + Notifikasi, pointing at their own workspaces #}
+{% set role = current_user.role if current_user.is_authenticated else 'user' %}
+{% if role == 'admin' %}
+  {% set nav_items = [('resep', '/admin/bahan', 'book', 'Resep'), ('notifikasi', '/notifikasi', 'bell', 'Notifikasi')] %}
+{% elif role == 'sponsor' %}
+  {% set nav_items = [('resep', '/resep', 'book', 'Resep'), ('notifikasi', '/sponsor/promosi', 'bell', 'Notifikasi')] %}
+{% else %}
+  {% set nav_items = [('home', '/', 'home', 'Home'), ('racik', '/racik', 'pot', 'Racik'), ('resep', '/resep', 'book', 'Resep'), ('notifikasi', '/notifikasi', 'bell', 'Notifikasi')] %}
+{% endif %}
+{% set active = active if active in nav_items|map(attribute=0)|list else ('resep' if role != 'user' else active) %}
 <header class="nav">
   <div class="container nav__inner">
-    <a class="nav__logo" href="/" aria-label="Recipeat — beranda"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="Recipeat" width="135" height="72"></a>
+    <a class="nav__logo" href="{{ home_for(current_user) }}" aria-label="Recipeat — beranda"><img src="{{ asset('img/logo.webp') }}" alt="Recipeat" width="135" height="72"></a>
     <nav class="nav__items" aria-label="Navigasi utama">
       {% for key, href, ic, label in nav_items %}
         {% set on = key == active %}
