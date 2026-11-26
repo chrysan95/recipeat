@@ -56,9 +56,10 @@ def create_app(overrides=None):
         """Static URL with a content hash (?v=…) so browsers/CDN can cache files for a year and still get new versions."""
         try:
             with open(os.path.join(app.static_folder, filename), "rb") as f:
-                return url_for("static", filename=filename, v=hashlib.md5(f.read()).hexdigest()[:10])
-        except FileNotFoundError:
-            return url_for("static", filename=filename)
+                version = hashlib.md5(f.read()).hexdigest()[:10]
+        except FileNotFoundError:  # on Vercel public/ lives on the CDN, not inside the function → version by deployment
+            version = (os.environ.get("VERCEL_GIT_COMMIT_SHA") or os.environ.get("VERCEL_DEPLOYMENT_ID") or "dev")[:10]
+        return url_for("static", filename=filename, v=version)
 
     app.jinja_env.globals.update(icon=icon, solid_icon=solid_icon, home_for=home_for, credit_for=credit_for, asset=asset, **TEMPLATE_HELPERS)
 

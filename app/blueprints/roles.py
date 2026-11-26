@@ -203,7 +203,7 @@ def promo_edit(promo_id):
 @bp.get("/notifikasi")
 @login_required
 def notifications():
-    if current_user.role == "sponsor":  # a sponsor's bell tab is where they manage promotions
+    if current_user.role in ("sponsor", "admin"):  # their bell tab is where they manage promotions
         return redirect("/sponsor/promosi")
     rows = db.session.execute(text("""SELECT n.* FROM notifications n LEFT JOIN promotions p ON p.id = n.promotion_id
         WHERE (n.user_id = :u OR n.user_id IS NULL) AND (n.promotion_id IS NULL OR p.active)

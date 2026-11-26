@@ -55,7 +55,7 @@ class Client:
         return self.c.get(url, **kw)
 
     def refresh_token(self, url="/masuk"):
-        html = self.c.get(url).get_data(as_text=True)
+        html = self.c.get(url, follow_redirects=True).get_data(as_text=True)
         self.token = re.search(r'name="csrf-token" content="([^"]+)"', html).group(1)
         return self.token
 

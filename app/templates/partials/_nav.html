@@ -1,7 +1,7 @@
 {# Users get four tabs; admins and sponsors only Resep + Notifikasi, pointing at their own workspaces #}
 {% set role = current_user.role if current_user.is_authenticated else 'user' %}
-{% if role == 'admin' %}
-  {% set nav_items = [('resep', '/admin/bahan', 'book', 'Resep'), ('notifikasi', '/notifikasi', 'bell', 'Notifikasi')] %}
+{% if role == 'admin' %}  
+  {% set nav_items = [('resep', '/admin/bahan', 'book', 'Resep'), ('notifikasi', '/sponsor/promosi', 'bell', 'Notifikasi')] %}{% set nav_items = [('resep', '/admin/bahan', 'book', 'Resep'), ('notifikasi', '/notifikasi', 'bell', 'Notifikasi')] %}
 {% elif role == 'sponsor' %}
   {% set nav_items = [('resep', '/resep', 'book', 'Resep'), ('notifikasi', '/sponsor/promosi', 'bell', 'Notifikasi')] %}
 {% else %}

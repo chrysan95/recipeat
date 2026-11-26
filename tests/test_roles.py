@@ -50,6 +50,7 @@ def test_admin_and_sponsor_get_their_own_workspace(new_client):
     assert a.c.get("/").headers["Location"].endswith("/admin/bahan")
     assert a.c.get("/resep").headers["Location"].endswith("/admin/bahan")
     assert a.c.get("/profil/preferensi").headers["Location"].endswith("/profil")
+    assert a.c.get("/notifikasi").headers["Location"].endswith("/sponsor/promosi")
     nav = a.c.get("/admin/bahan").get_data(as_text=True)
     assert 'href="/racik"' not in nav and "Riwayat Bahan" in nav
     s = new_client()
