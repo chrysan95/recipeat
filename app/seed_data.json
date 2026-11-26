@@ -1,0 +1,1963 @@
+{
+ "USERS": [
+  {
+   "name": "Admin Recipeat",
+   "email": "admin@recipeat.id",
+   "password": "Admin#2026",
+   "role": "admin",
+   "newsletter": false
+  },
+  {
+   "name": "Dapurnusa",
+   "email": "sponsor@dapurnusa.id",
+   "password": "Sponsor#2026",
+   "role": "sponsor",
+   "newsletter": false
+  },
+  {
+   "name": "Keisa",
+   "email": "keisa@gmail.com",
+   "password": "Keisa#2026",
+   "role": "user",
+   "newsletter": true
+  },
+  {
+   "name": "Budi",
+   "email": "budi@gmail.com",
+   "password": "Budi#2026",
+   "role": "user",
+   "newsletter": false
+  },
+  {
+   "name": "Sari Wulandari",
+   "email": "sari@gmail.com",
+   "password": "Sari#2026",
+   "role": "user",
+   "newsletter": false
+  }
+ ],
+ "CATEGORIES": [
+  "Daging",
+  "Telur",
+  "Sayur",
+  "Buah",
+  "Ikan",
+  "Bumbu Dapur",
+  "Rempah",
+  "Bahan Masakan",
+  "Susu & Olahan",
+  "Sarapan",
+  "Minuman",
+  "Dessert & Juice",
+  "Bahan Kue",
+  "Non Halal"
+ ],
+ "INGREDIENTS": [
+  [
+   "Ayam",
+   "Daging",
+   "m",
+   98
+  ],
+  [
+   "Daging Sapi",
+   "Daging",
+   "m",
+   80
+  ],
+  [
+   "Telur",
+   "Telur",
+   "g",
+   97
+  ],
+  [
+   "Bawang Bombay",
+   "Sayur",
+   "v",
+   90
+  ],
+  [
+   "Wortel",
+   "Sayur",
+   "v",
+   89
+  ],
+  [
+   "Kentang",
+   "Sayur",
+   "v",
+   88
+  ],
+  [
+   "Tomat",
+   "Sayur",
+   "v",
+   87
+  ],
+  [
+   "Daun Singkong",
+   "Sayur",
+   "v",
+   40
+  ],
+  [
+   "Jagung",
+   "Sayur",
+   "v",
+   60
+  ],
+  [
+   "Kangkung",
+   "Sayur",
+   "v",
+   65
+  ],
+  [
+   "Kacang Panjang",
+   "Sayur",
+   "v",
+   55
+  ],
+  [
+   "Kol",
+   "Sayur",
+   "v",
+   58
+  ],
+  [
+   "Tauge",
+   "Sayur",
+   "v",
+   50
+  ],
+  [
+   "Labu Siam",
+   "Sayur",
+   "v",
+   45
+  ],
+  [
+   "Daun Bawang",
+   "Sayur",
+   "v",
+   62
+  ],
+  [
+   "Seledri",
+   "Sayur",
+   "v",
+   52
+  ],
+  [
+   "Timun",
+   "Sayur",
+   "v",
+   57
+  ],
+  [
+   "Melinjo",
+   "Sayur",
+   "v",
+   30
+  ],
+  [
+   "Pisang",
+   "Buah",
+   "v",
+   70
+  ],
+  [
+   "Alpukat",
+   "Buah",
+   "v",
+   54
+  ],
+  [
+   "Nangka",
+   "Buah",
+   "v",
+   35
+  ],
+  [
+   "Kelapa Muda",
+   "Buah",
+   "v",
+   38
+  ],
+  [
+   "Kelapa Parut",
+   "Buah",
+   "v",
+   44
+  ],
+  [
+   "Ikan Kembung",
+   "Ikan",
+   "m",
+   42
+  ],
+  [
+   "Udang",
+   "Ikan",
+   "m",
+   61
+  ],
+  [
+   "Bawang Merah",
+   "Bumbu Dapur",
+   "v",
+   96
+  ],
+  [
+   "Bawang Putih",
+   "Bumbu Dapur",
+   "v",
+   95
+  ],
+  [
+   "Cabe Merah Besar",
+   "Bumbu Dapur",
+   "v",
+   84
+  ],
+  [
+   "Cabe Rawit",
+   "Bumbu Dapur",
+   "v",
+   79
+  ],
+  [
+   "Garam",
+   "Bumbu Dapur",
+   "v",
+   99
+  ],
+  [
+   "Gula",
+   "Bumbu Dapur",
+   "v",
+   93
+  ],
+  [
+   "Gula Merah",
+   "Bumbu Dapur",
+   "v",
+   59
+  ],
+  [
+   "Kecap Manis",
+   "Bumbu Dapur",
+   "v",
+   85
+  ],
+  [
+   "Merica",
+   "Bumbu Dapur",
+   "v",
+   75
+  ],
+  [
+   "Kemiri",
+   "Bumbu Dapur",
+   "v",
+   48
+  ],
+  [
+   "Terasi",
+   "Bumbu Dapur",
+   "m",
+   46
+  ],
+  [
+   "Asam Jawa",
+   "Bumbu Dapur",
+   "v",
+   41
+  ],
+  [
+   "Lengkuas",
+   "Rempah",
+   "v",
+   53
+  ],
+  [
+   "Jahe",
+   "Rempah",
+   "v",
+   64
+  ],
+  [
+   "Kunyit",
+   "Rempah",
+   "v",
+   56
+  ],
+  [
+   "Serai",
+   "Rempah",
+   "v",
+   58
+  ],
+  [
+   "Daun Salam",
+   "Rempah",
+   "v",
+   60
+  ],
+  [
+   "Daun Jeruk",
+   "Rempah",
+   "v",
+   49
+  ],
+  [
+   "Ketumbar",
+   "Rempah",
+   "v",
+   47
+  ],
+  [
+   "Kayu Manis",
+   "Rempah",
+   "v",
+   33
+  ],
+  [
+   "Perasa Pandan",
+   "Rempah",
+   "v",
+   36
+  ],
+  [
+   "Minyak Goreng",
+   "Bahan Masakan",
+   "v",
+   94
+  ],
+  [
+   "Nasi",
+   "Bahan Masakan",
+   "v",
+   92
+  ],
+  [
+   "Tempe",
+   "Bahan Masakan",
+   "v",
+   74
+  ],
+  [
+   "Tahu",
+   "Bahan Masakan",
+   "v",
+   73
+  ],
+  [
+   "Mie Kuning",
+   "Bahan Masakan",
+   "v",
+   63
+  ],
+  [
+   "Santan",
+   "Bahan Masakan",
+   "v",
+   66
+  ],
+  [
+   "Kacang Tanah",
+   "Bahan Masakan",
+   "v",
+   51
+  ],
+  [
+   "Air",
+   "Bahan Masakan",
+   "v",
+   20
+  ],
+  [
+   "Susu Kental Manis",
+   "Susu & Olahan",
+   "g",
+   57
+  ],
+  [
+   "Keju",
+   "Susu & Olahan",
+   "g",
+   62
+  ],
+  [
+   "Mentega",
+   "Susu & Olahan",
+   "g",
+   61
+  ],
+  [
+   "Roti Tawar",
+   "Sarapan",
+   "g",
+   55
+  ],
+  [
+   "Teh",
+   "Minuman",
+   "v",
+   40
+  ],
+  [
+   "Sirup Cocopandan",
+   "Dessert & Juice",
+   "v",
+   37
+  ],
+  [
+   "Es Batu",
+   "Dessert & Juice",
+   "v",
+   39
+  ],
+  [
+   "Tepung Terigu",
+   "Bahan Kue",
+   "v",
+   72
+  ],
+  [
+   "Tepung Ketan",
+   "Bahan Kue",
+   "v",
+   34
+  ],
+  [
+   "Tepung Beras",
+   "Bahan Kue",
+   "v",
+   43
+  ],
+  [
+   "Ragi Instan",
+   "Bahan Kue",
+   "v",
+   31
+  ],
+  [
+   "Cokelat Meses",
+   "Bahan Kue",
+   "g",
+   45
+  ],
+  [
+   "Daging Babi",
+   "Non Halal",
+   "mx",
+   25
+  ],
+  [
+   "Angciu",
+   "Non Halal",
+   "vx",
+   15
+  ]
+ ],
+ "TAGS": [
+  [
+   "Makanan Berat",
+   "berat",
+   "jenis"
+  ],
+  [
+   "Makanan Keluarga",
+   "keluarga",
+   "jenis"
+  ],
+  [
+   "Snack",
+   "snack",
+   "jenis"
+  ],
+  [
+   "Dessert",
+   "dessert",
+   "jenis"
+  ],
+  [
+   "Asin",
+   "asin",
+   "rasa"
+  ],
+  [
+   "Manis",
+   "manis",
+   "rasa"
+  ],
+  [
+   "Pedas",
+   "pedas",
+   "rasa"
+  ],
+  [
+   "Asam",
+   "asam",
+   "rasa"
+  ],
+  [
+   "Gurih",
+   "gurih",
+   "rasa"
+  ],
+  [
+   "Sarapan",
+   "sarapan",
+   "waktu"
+  ],
+  [
+   "Makan Siang",
+   "makan-siang",
+   "waktu"
+  ],
+  [
+   "Makan Malam",
+   "makan-malam",
+   "waktu"
+  ],
+  [
+   "Camilan",
+   "camilan",
+   "waktu"
+  ]
+ ],
+ "RECIPES": [
+  {
+   "title": "Nasi Goreng",
+   "author": "budi@gmail.com",
+   "origin": "Indonesia",
+   "servings": 1,
+   "prep": 10,
+   "cook": 25,
+   "price": [
+    15000,
+    25000
+   ],
+   "description": "Sajian nasi yang ditumis dengan kecap manis, rempah, dan sayuran, serta sering disajikan dengan tambahan telur ceplok.",
+   "tags": [
+    "berat",
+    "asin",
+    "pedas",
+    "gurih",
+    "sarapan",
+    "makan-malam"
+   ],
+   "video": "https://www.youtube.com/watch?v=placeholder01",
+   "ingredients": [
+    [
+     "Nasi",
+     300,
+     "gr"
+    ],
+    [
+     "Telur",
+     2,
+     "butir"
+    ],
+    [
+     "Bawang Merah",
+     3,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     2,
+     "siung"
+    ],
+    [
+     "Cabe Merah Besar",
+     1,
+     "buah"
+    ],
+    [
+     "Kecap Manis",
+     2,
+     "sdm"
+    ],
+    [
+     "Garam",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Gula",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Minyak Goreng",
+     2,
+     "sdm"
+    ],
+    [
+     "Timun",
+     null,
+     "",
+     "Secukupnya"
+    ]
+   ],
+   "steps": [
+    [
+     "Tumis Bumbu",
+     "Panaskan minyak dalam wajan, tumis bawang merah, bawang putih, dan cabai hingga harum."
+    ],
+    [
+     "Masak Telur",
+     "Masukkan telur, orak-arik hingga matang."
+    ],
+    [
+     "Tambahkan Nasi",
+     "Tambahkan nasi putih dan kecap manis, aduk rata."
+    ],
+    [
+     "Bumbui",
+     "Masukkan garam dan gula, aduk kembali hingga semua bahan tercampur merata dan nasi terasa hangat."
+    ],
+    [
+     "Sajikan",
+     "Sajikan hangat dengan irisan timun."
+    ]
+   ]
+  },
+  {
+   "title": "Soto Mie",
+   "author": "budi@gmail.com",
+   "origin": "Bogor",
+   "servings": 4,
+   "prep": 20,
+   "cook": 40,
+   "price": [
+    40000,
+    60000
+   ],
+   "description": "Soto berkuah kuning gurih khas Bogor dengan mie kuning, irisan daging sapi, kol, dan tomat.",
+   "tags": [
+    "berat",
+    "keluarga",
+    "gurih",
+    "asin",
+    "makan-siang",
+    "makan-malam"
+   ],
+   "ingredients": [
+    [
+     "Daging Sapi",
+     300,
+     "gr"
+    ],
+    [
+     "Mie Kuning",
+     200,
+     "gr"
+    ],
+    [
+     "Kol",
+     100,
+     "gr"
+    ],
+    [
+     "Tomat",
+     2,
+     "buah"
+    ],
+    [
+     "Daun Bawang",
+     2,
+     "batang"
+    ],
+    [
+     "Seledri",
+     2,
+     "batang"
+    ],
+    [
+     "Bawang Merah",
+     6,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     4,
+     "siung"
+    ],
+    [
+     "Kunyit",
+     2,
+     "cm"
+    ],
+    [
+     "Serai",
+     1,
+     "batang"
+    ],
+    [
+     "Daun Salam",
+     2,
+     "lembar"
+    ],
+    [
+     "Garam",
+     1,
+     "sdt"
+    ],
+    [
+     "Merica",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Minyak Goreng",
+     2,
+     "sdm"
+    ],
+    [
+     "Air",
+     1.5,
+     "liter"
+    ]
+   ],
+   "steps": [
+    [
+     "Rebus Daging",
+     "Rebus daging sapi dalam air hingga empuk, lalu potong dadu. Simpan kaldunya."
+    ],
+    [
+     "Haluskan Bumbu",
+     "Haluskan bawang merah, bawang putih, dan kunyit, lalu tumis bersama serai dan daun salam hingga harum."
+    ],
+    [
+     "Masak Kuah",
+     "Masukkan bumbu tumis ke kaldu, bumbui garam dan merica, didihkan."
+    ],
+    [
+     "Siapkan Isian",
+     "Seduh mie kuning dan kol sebentar, tata dalam mangkuk bersama tomat dan daging."
+    ],
+    [
+     "Sajikan",
+     "Siram dengan kuah panas, taburi daun bawang dan seledri."
+    ]
+   ]
+  },
+  {
+   "title": "Martabak Manis Coklat Keju",
+   "author": "keisa@gmail.com",
+   "origin": "Bangka",
+   "servings": 4,
+   "prep": 70,
+   "cook": 15,
+   "price": [
+    30000,
+    45000
+   ],
+   "description": "Martabak tebal bersarang dengan olesan mentega, taburan cokelat meses, keju parut, dan susu kental manis.",
+   "tags": [
+    "snack",
+    "dessert",
+    "manis",
+    "camilan"
+   ],
+   "ingredients": [
+    [
+     "Tepung Terigu",
+     250,
+     "gr"
+    ],
+    [
+     "Telur",
+     1,
+     "butir"
+    ],
+    [
+     "Gula",
+     50,
+     "gr"
+    ],
+    [
+     "Air",
+     300,
+     "ml"
+    ],
+    [
+     "Ragi Instan",
+     1,
+     "sdt"
+    ],
+    [
+     "Mentega",
+     2,
+     "sdm"
+    ],
+    [
+     "Cokelat Meses",
+     50,
+     "gr"
+    ],
+    [
+     "Keju",
+     50,
+     "gr"
+    ],
+    [
+     "Susu Kental Manis",
+     3,
+     "sdm"
+    ]
+   ],
+   "steps": [
+    [
+     "Buat Adonan",
+     "Campur tepung, gula, telur, ragi, dan air. Aduk hingga licin, diamkan 1 jam."
+    ],
+    [
+     "Panggang",
+     "Tuang adonan ke wajan tebal panas, tunggu hingga bersarang lalu taburi sedikit gula dan tutup."
+    ],
+    [
+     "Beri Topping",
+     "Angkat, olesi mentega, taburi cokelat meses, keju, dan susu kental manis."
+    ],
+    [
+     "Sajikan",
+     "Lipat dua, potong-potong, dan sajikan hangat."
+    ]
+   ]
+  },
+  {
+   "title": "Klepon",
+   "author": "keisa@gmail.com",
+   "origin": "Jawa",
+   "servings": 4,
+   "prep": 20,
+   "cook": 15,
+   "price": [
+    15000,
+    25000
+   ],
+   "description": "Bola ketan hijau beraroma pandan berisi gula merah cair dan dibalut kelapa parut.",
+   "tags": [
+    "snack",
+    "dessert",
+    "manis",
+    "camilan"
+   ],
+   "ingredients": [
+    [
+     "Gula",
+     1,
+     "sdt"
+    ],
+    [
+     "Garam",
+     0.25,
+     "sdt"
+    ],
+    [
+     "Santan",
+     1,
+     "sdm"
+    ],
+    [
+     "Tepung Ketan",
+     250,
+     "gr"
+    ],
+    [
+     "Tepung Beras",
+     50,
+     "gr"
+    ],
+    [
+     "Gula Merah",
+     null,
+     "",
+     "Secukupnya"
+    ],
+    [
+     "Kelapa Parut",
+     null,
+     "",
+     "Secukupnya"
+    ],
+    [
+     "Perasa Pandan",
+     null,
+     "",
+     "Secukupnya"
+    ]
+   ],
+   "steps": [
+    [
+     "Buat Adonan",
+     "Campur tepung ketan, tepung beras, gula, garam, santan, dan perasa pandan. Uleni hingga kalis."
+    ],
+    [
+     "Isi Gula Merah",
+     "Ambil sedikit adonan, pipihkan, isi dengan gula merah, lalu bulatkan."
+    ],
+    [
+     "Rebus",
+     "Rebus klepon dalam air mendidih hingga mengapung, angkat dan tiriskan."
+    ],
+    [
+     "Gulingkan",
+     "Gulingkan klepon di atas kelapa parut yang sudah dikukus dengan sedikit garam."
+    ]
+   ]
+  },
+  {
+   "title": "Sayur Asem",
+   "author": "budi@gmail.com",
+   "origin": "Betawi",
+   "servings": 4,
+   "prep": 15,
+   "cook": 30,
+   "price": [
+    20000,
+    30000
+   ],
+   "description": "Sayur berkuah segar asam-manis berisi labu siam, kacang panjang, jagung, dan melinjo.",
+   "tags": [
+    "berat",
+    "keluarga",
+    "asam",
+    "manis",
+    "makan-siang"
+   ],
+   "ingredients": [
+    [
+     "Labu Siam",
+     1,
+     "buah"
+    ],
+    [
+     "Kacang Panjang",
+     100,
+     "gr"
+    ],
+    [
+     "Jagung",
+     1,
+     "buah"
+    ],
+    [
+     "Melinjo",
+     50,
+     "gr"
+    ],
+    [
+     "Kacang Tanah",
+     50,
+     "gr"
+    ],
+    [
+     "Asam Jawa",
+     2,
+     "sdm"
+    ],
+    [
+     "Gula Merah",
+     1,
+     "sdm"
+    ],
+    [
+     "Bawang Merah",
+     5,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     3,
+     "siung"
+    ],
+    [
+     "Cabe Merah Besar",
+     2,
+     "buah"
+    ],
+    [
+     "Terasi",
+     1,
+     "sdt"
+    ],
+    [
+     "Lengkuas",
+     2,
+     "cm"
+    ],
+    [
+     "Daun Salam",
+     2,
+     "lembar"
+    ],
+    [
+     "Garam",
+     1,
+     "sdt"
+    ],
+    [
+     "Air",
+     1.5,
+     "liter"
+    ]
+   ],
+   "steps": [
+    [
+     "Haluskan Bumbu",
+     "Haluskan bawang merah, bawang putih, cabai, dan terasi."
+    ],
+    [
+     "Didihkan Kuah",
+     "Rebus air bersama bumbu halus, lengkuas, dan daun salam."
+    ],
+    [
+     "Masukkan Sayur",
+     "Masukkan jagung, kacang tanah, dan melinjo, lalu labu siam dan kacang panjang."
+    ],
+    [
+     "Bumbui",
+     "Tambahkan asam jawa, gula merah, dan garam. Masak hingga sayur matang."
+    ]
+   ]
+  },
+  {
+   "title": "Ayam Goreng Lengkuas",
+   "author": "budi@gmail.com",
+   "origin": "Sunda",
+   "servings": 4,
+   "prep": 15,
+   "cook": 45,
+   "price": [
+    35000,
+    50000
+   ],
+   "description": "Ayam diungkep bumbu kuning lalu digoreng renyah bersama serundeng lengkuas.",
+   "tags": [
+    "berat",
+    "keluarga",
+    "gurih",
+    "asin",
+    "makan-siang",
+    "makan-malam"
+   ],
+   "ingredients": [
+    [
+     "Ayam",
+     1,
+     "ekor"
+    ],
+    [
+     "Lengkuas",
+     150,
+     "gr"
+    ],
+    [
+     "Bawang Merah",
+     8,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     5,
+     "siung"
+    ],
+    [
+     "Kunyit",
+     3,
+     "cm"
+    ],
+    [
+     "Ketumbar",
+     1,
+     "sdt"
+    ],
+    [
+     "Kemiri",
+     3,
+     "butir"
+    ],
+    [
+     "Serai",
+     2,
+     "batang"
+    ],
+    [
+     "Daun Salam",
+     3,
+     "lembar"
+    ],
+    [
+     "Garam",
+     2,
+     "sdt"
+    ],
+    [
+     "Air",
+     500,
+     "ml"
+    ],
+    [
+     "Minyak Goreng",
+     null,
+     "",
+     "Untuk menggoreng"
+    ]
+   ],
+   "steps": [
+    [
+     "Haluskan Bumbu",
+     "Haluskan bawang, kunyit, ketumbar, dan kemiri. Parut lengkuas."
+    ],
+    [
+     "Ungkep Ayam",
+     "Rebus ayam bersama bumbu, lengkuas, serai, daun salam, garam, dan air hingga meresap."
+    ],
+    [
+     "Goreng",
+     "Goreng ayam hingga kecokelatan, lalu goreng sisa ampas lengkuas hingga kering."
+    ],
+    [
+     "Sajikan",
+     "Taburkan serundeng lengkuas di atas ayam."
+    ]
+   ]
+  },
+  {
+   "title": "Tempe Orek",
+   "author": "sari@gmail.com",
+   "origin": "Jawa",
+   "servings": 2,
+   "prep": 10,
+   "cook": 15,
+   "price": [
+    10000,
+    15000
+   ],
+   "description": "Tempe goreng kering yang ditumis kecap manis dan cabai, cocok untuk bekal.",
+   "tags": [
+    "berat",
+    "manis",
+    "pedas",
+    "makan-siang"
+   ],
+   "ingredients": [
+    [
+     "Tempe",
+     1,
+     "papan"
+    ],
+    [
+     "Bawang Merah",
+     4,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     2,
+     "siung"
+    ],
+    [
+     "Cabe Merah Besar",
+     2,
+     "buah"
+    ],
+    [
+     "Kecap Manis",
+     3,
+     "sdm"
+    ],
+    [
+     "Gula Merah",
+     1,
+     "sdm"
+    ],
+    [
+     "Garam",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Minyak Goreng",
+     3,
+     "sdm"
+    ]
+   ],
+   "steps": [
+    [
+     "Goreng Tempe",
+     "Potong tempe korek api, goreng hingga kering."
+    ],
+    [
+     "Tumis Bumbu",
+     "Tumis irisan bawang dan cabai hingga harum."
+    ],
+    [
+     "Campur",
+     "Masukkan tempe, kecap manis, gula merah, dan garam. Aduk hingga karamel melapisi tempe."
+    ]
+   ]
+  },
+  {
+   "title": "Pisang Goreng",
+   "author": "sari@gmail.com",
+   "origin": "Indonesia",
+   "servings": 2,
+   "prep": 10,
+   "cook": 10,
+   "price": [
+    8000,
+    12000
+   ],
+   "description": "Pisang berbalut adonan tepung renyah, camilan sore yang paling gampang.",
+   "tags": [
+    "snack",
+    "manis",
+    "camilan"
+   ],
+   "ingredients": [
+    [
+     "Pisang",
+     4,
+     "buah"
+    ],
+    [
+     "Tepung Terigu",
+     100,
+     "gr"
+    ],
+    [
+     "Tepung Beras",
+     2,
+     "sdm"
+    ],
+    [
+     "Gula",
+     1,
+     "sdm"
+    ],
+    [
+     "Garam",
+     0.25,
+     "sdt"
+    ],
+    [
+     "Air",
+     120,
+     "ml"
+    ],
+    [
+     "Minyak Goreng",
+     null,
+     "",
+     "Untuk menggoreng"
+    ]
+   ],
+   "steps": [
+    [
+     "Buat Adonan",
+     "Campur tepung terigu, tepung beras, gula, garam, dan air hingga kental."
+    ],
+    [
+     "Celup Pisang",
+     "Belah pisang, celupkan ke adonan."
+    ],
+    [
+     "Goreng",
+     "Goreng dalam minyak panas hingga keemasan, tiriskan."
+    ]
+   ]
+  },
+  {
+   "title": "Rendang Sapi",
+   "author": "budi@gmail.com",
+   "origin": "Padang",
+   "servings": 6,
+   "prep": 30,
+   "cook": 180,
+   "price": [
+    120000,
+    180000
+   ],
+   "description": "Daging sapi dimasak perlahan dalam santan dan rempah hingga kering dan bumbunya meresap.",
+   "tags": [
+    "berat",
+    "keluarga",
+    "pedas",
+    "gurih",
+    "makan-malam"
+   ],
+   "ingredients": [
+    [
+     "Daging Sapi",
+     1,
+     "kg"
+    ],
+    [
+     "Santan",
+     1,
+     "liter"
+    ],
+    [
+     "Cabe Merah Besar",
+     15,
+     "buah"
+    ],
+    [
+     "Bawang Merah",
+     12,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     6,
+     "siung"
+    ],
+    [
+     "Jahe",
+     3,
+     "cm"
+    ],
+    [
+     "Lengkuas",
+     3,
+     "cm"
+    ],
+    [
+     "Kunyit",
+     2,
+     "cm"
+    ],
+    [
+     "Serai",
+     2,
+     "batang"
+    ],
+    [
+     "Daun Jeruk",
+     5,
+     "lembar"
+    ],
+    [
+     "Daun Salam",
+     3,
+     "lembar"
+    ],
+    [
+     "Kelapa Parut",
+     100,
+     "gr",
+     "Disangrai"
+    ],
+    [
+     "Garam",
+     2,
+     "sdt"
+    ]
+   ],
+   "steps": [
+    [
+     "Haluskan Bumbu",
+     "Haluskan cabai, bawang, jahe, lengkuas, dan kunyit."
+    ],
+    [
+     "Masak Santan",
+     "Rebus santan bersama bumbu halus, serai, daun jeruk, dan daun salam sambil diaduk."
+    ],
+    [
+     "Masukkan Daging",
+     "Masukkan daging dan kelapa sangrai, masak dengan api kecil."
+    ],
+    [
+     "Masak Hingga Kering",
+     "Aduk sesekali selama ±3 jam hingga kuah mengering dan berminyak."
+    ]
+   ]
+  },
+  {
+   "title": "Telur Balado",
+   "author": "keisa@gmail.com",
+   "origin": "Minang",
+   "servings": 2,
+   "prep": 10,
+   "cook": 15,
+   "price": [
+    12000,
+    18000
+   ],
+   "description": "Telur rebus goreng yang dibalut sambal balado merah pedas-manis.",
+   "tags": [
+    "berat",
+    "pedas",
+    "manis",
+    "makan-siang",
+    "makan-malam"
+   ],
+   "ingredients": [
+    [
+     "Telur",
+     4,
+     "butir"
+    ],
+    [
+     "Cabe Merah Besar",
+     6,
+     "buah"
+    ],
+    [
+     "Bawang Merah",
+     5,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     2,
+     "siung"
+    ],
+    [
+     "Tomat",
+     1,
+     "buah"
+    ],
+    [
+     "Gula",
+     1,
+     "sdt"
+    ],
+    [
+     "Garam",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Minyak Goreng",
+     4,
+     "sdm"
+    ]
+   ],
+   "steps": [
+    [
+     "Rebus Telur",
+     "Rebus telur 10 menit, kupas, lalu goreng sebentar hingga kulitnya berkerut."
+    ],
+    [
+     "Buat Balado",
+     "Ulek kasar cabai, bawang, dan tomat, lalu tumis hingga matang."
+    ],
+    [
+     "Campur",
+     "Bumbui gula dan garam, masukkan telur, aduk hingga terbalut sambal."
+    ]
+   ]
+  },
+  {
+   "title": "Sop Ayam",
+   "author": "sari@gmail.com",
+   "origin": "Indonesia",
+   "servings": 4,
+   "prep": 15,
+   "cook": 40,
+   "price": [
+    35000,
+    45000
+   ],
+   "description": "Sup bening hangat berisi ayam, wortel, kentang, dan kol.",
+   "tags": [
+    "berat",
+    "keluarga",
+    "gurih",
+    "asin",
+    "makan-siang",
+    "makan-malam"
+   ],
+   "ingredients": [
+    [
+     "Ayam",
+     500,
+     "gr"
+    ],
+    [
+     "Wortel",
+     2,
+     "buah"
+    ],
+    [
+     "Kentang",
+     2,
+     "buah"
+    ],
+    [
+     "Kol",
+     100,
+     "gr"
+    ],
+    [
+     "Bawang Putih",
+     4,
+     "siung"
+    ],
+    [
+     "Bawang Bombay",
+     0.5,
+     "buah"
+    ],
+    [
+     "Daun Bawang",
+     1,
+     "batang"
+    ],
+    [
+     "Seledri",
+     1,
+     "batang"
+    ],
+    [
+     "Merica",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Garam",
+     1.5,
+     "sdt"
+    ],
+    [
+     "Air",
+     1.5,
+     "liter"
+    ]
+   ],
+   "steps": [
+    [
+     "Rebus Ayam",
+     "Rebus ayam hingga mendidih, buang busanya."
+    ],
+    [
+     "Tumis Aromatik",
+     "Tumis bawang putih dan bombay, masukkan ke kaldu."
+    ],
+    [
+     "Masukkan Sayur",
+     "Masukkan wortel dan kentang, lalu kol menjelang matang."
+    ],
+    [
+     "Bumbui",
+     "Bumbui garam dan merica, taburi daun bawang dan seledri."
+    ]
+   ]
+  },
+  {
+   "title": "Perkedel Kentang",
+   "author": "keisa@gmail.com",
+   "origin": "Indonesia",
+   "servings": 4,
+   "prep": 20,
+   "cook": 20,
+   "price": [
+    15000,
+    20000
+   ],
+   "description": "Kentang goreng yang dihaluskan, dibentuk bulat pipih, dicelup telur, lalu digoreng.",
+   "tags": [
+    "snack",
+    "keluarga",
+    "gurih",
+    "asin",
+    "camilan"
+   ],
+   "ingredients": [
+    [
+     "Kentang",
+     500,
+     "gr"
+    ],
+    [
+     "Telur",
+     1,
+     "butir"
+    ],
+    [
+     "Bawang Merah",
+     4,
+     "siung",
+     "Goreng"
+    ],
+    [
+     "Seledri",
+     1,
+     "batang"
+    ],
+    [
+     "Merica",
+     0.25,
+     "sdt"
+    ],
+    [
+     "Garam",
+     1,
+     "sdt"
+    ],
+    [
+     "Minyak Goreng",
+     null,
+     "",
+     "Untuk menggoreng"
+    ]
+   ],
+   "steps": [
+    [
+     "Goreng Kentang",
+     "Potong kentang, goreng hingga matang lalu haluskan selagi panas."
+    ],
+    [
+     "Bumbui",
+     "Campur dengan bawang goreng, seledri, merica, dan garam. Bentuk bulat pipih."
+    ],
+    [
+     "Goreng",
+     "Celupkan ke kocokan telur, goreng hingga kecokelatan."
+    ]
+   ]
+  },
+  {
+   "title": "Tumis Kangkung",
+   "author": "sari@gmail.com",
+   "origin": "Indonesia",
+   "servings": 2,
+   "prep": 5,
+   "cook": 7,
+   "price": [
+    8000,
+    12000
+   ],
+   "description": "Kangkung ditumis cepat dengan bawang, cabai rawit, dan tomat. Siap dalam 12 menit.",
+   "tags": [
+    "berat",
+    "pedas",
+    "asin",
+    "makan-siang"
+   ],
+   "ingredients": [
+    [
+     "Kangkung",
+     2,
+     "ikat"
+    ],
+    [
+     "Bawang Merah",
+     4,
+     "siung"
+    ],
+    [
+     "Bawang Putih",
+     3,
+     "siung"
+    ],
+    [
+     "Cabe Rawit",
+     5,
+     "buah"
+    ],
+    [
+     "Tomat",
+     1,
+     "buah"
+    ],
+    [
+     "Garam",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Gula",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Minyak Goreng",
+     2,
+     "sdm"
+    ]
+   ],
+   "steps": [
+    [
+     "Siapkan",
+     "Petik kangkung, cuci bersih. Iris bawang, cabai, dan tomat."
+    ],
+    [
+     "Tumis",
+     "Tumis bawang dan cabai hingga harum, masukkan tomat."
+    ],
+    [
+     "Masak Kangkung",
+     "Masukkan kangkung, bumbui garam dan gula, masak dengan api besar 2 menit."
+    ]
+   ]
+  },
+  {
+   "title": "Es Teler",
+   "author": "keisa@gmail.com",
+   "origin": "Jakarta",
+   "servings": 4,
+   "prep": 15,
+   "cook": 0,
+   "price": [
+    35000,
+    50000
+   ],
+   "description": "Minuman segar berisi alpukat, kelapa muda, dan nangka dengan susu kental manis dan sirup.",
+   "tags": [
+    "dessert",
+    "manis",
+    "camilan"
+   ],
+   "ingredients": [
+    [
+     "Alpukat",
+     2,
+     "buah"
+    ],
+    [
+     "Kelapa Muda",
+     1,
+     "buah"
+    ],
+    [
+     "Nangka",
+     100,
+     "gr"
+    ],
+    [
+     "Susu Kental Manis",
+     4,
+     "sdm"
+    ],
+    [
+     "Sirup Cocopandan",
+     4,
+     "sdm"
+    ],
+    [
+     "Es Batu",
+     null,
+     "",
+     "Secukupnya"
+    ]
+   ],
+   "steps": [
+    [
+     "Potong Buah",
+     "Keruk alpukat dan kelapa muda, potong nangka."
+    ],
+    [
+     "Tata",
+     "Tata buah dalam gelas, tambahkan es batu."
+    ],
+    [
+     "Siram",
+     "Siram dengan sirup dan susu kental manis, sajikan segera."
+    ]
+   ]
+  },
+  {
+   "title": "Gado-Gado",
+   "author": "budi@gmail.com",
+   "origin": "Betawi",
+   "servings": 2,
+   "prep": 20,
+   "cook": 20,
+   "price": [
+    20000,
+    30000
+   ],
+   "description": "Sayuran rebus, tahu, tempe, dan telur yang disiram bumbu kacang kental.",
+   "tags": [
+    "berat",
+    "gurih",
+    "manis",
+    "pedas",
+    "makan-siang"
+   ],
+   "ingredients": [
+    [
+     "Kol",
+     100,
+     "gr"
+    ],
+    [
+     "Tauge",
+     100,
+     "gr"
+    ],
+    [
+     "Kacang Panjang",
+     100,
+     "gr"
+    ],
+    [
+     "Kentang",
+     1,
+     "buah"
+    ],
+    [
+     "Tahu",
+     2,
+     "potong"
+    ],
+    [
+     "Tempe",
+     0.5,
+     "papan"
+    ],
+    [
+     "Telur",
+     2,
+     "butir"
+    ],
+    [
+     "Timun",
+     1,
+     "buah"
+    ],
+    [
+     "Kacang Tanah",
+     150,
+     "gr"
+    ],
+    [
+     "Gula Merah",
+     2,
+     "sdm"
+    ],
+    [
+     "Cabe Rawit",
+     3,
+     "buah"
+    ],
+    [
+     "Garam",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Air",
+     200,
+     "ml"
+    ]
+   ],
+   "steps": [
+    [
+     "Rebus Sayur",
+     "Rebus kol, tauge, kacang panjang, dan kentang. Rebus telur."
+    ],
+    [
+     "Goreng",
+     "Goreng tahu dan tempe."
+    ],
+    [
+     "Bumbu Kacang",
+     "Haluskan kacang goreng, gula merah, cabai, dan garam, encerkan dengan air."
+    ],
+    [
+     "Sajikan",
+     "Tata semua bahan dan siram bumbu kacang."
+    ]
+   ]
+  },
+  {
+   "title": "Babi Kecap",
+   "author": "budi@gmail.com",
+   "origin": "Tionghoa-Indonesia",
+   "servings": 4,
+   "prep": 15,
+   "cook": 60,
+   "price": [
+    70000,
+    100000
+   ],
+   "description": "Daging babi dimasak kecap manis, jahe, dan arak masak hingga empuk. (Non halal)",
+   "tags": [
+    "berat",
+    "keluarga",
+    "manis",
+    "asin",
+    "makan-malam"
+   ],
+   "ingredients": [
+    [
+     "Daging Babi",
+     500,
+     "gr"
+    ],
+    [
+     "Kecap Manis",
+     5,
+     "sdm"
+    ],
+    [
+     "Bawang Putih",
+     6,
+     "siung"
+    ],
+    [
+     "Jahe",
+     3,
+     "cm"
+    ],
+    [
+     "Angciu",
+     2,
+     "sdm"
+    ],
+    [
+     "Gula",
+     1,
+     "sdm"
+    ],
+    [
+     "Garam",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Merica",
+     0.5,
+     "sdt"
+    ],
+    [
+     "Air",
+     400,
+     "ml"
+    ]
+   ],
+   "steps": [
+    [
+     "Tumis",
+     "Tumis bawang putih dan jahe hingga harum."
+    ],
+    [
+     "Masak Daging",
+     "Masukkan daging, aduk hingga berubah warna, tambahkan kecap, angciu, gula, garam, dan merica."
+    ],
+    [
+     "Ungkep",
+     "Tuang air, masak dengan api kecil hingga daging empuk dan kuah mengental."
+    ]
+   ]
+  }
+ ],
+ "REVIEW_LINES": [
+  "Enak banget, keluarga suka!",
+  "Bumbunya pas, gampang diikuti.",
+  "Sudah recook dua kali, mantap.",
+  "Kurang garam sedikit, sisanya oke.",
+  "Langkahnya jelas, terima kasih resepnya."
+ ]
+}
