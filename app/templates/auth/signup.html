@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import error_box, csrf, password_field %}
+{% set hide_nav = true %}
+{% block content %}
+<main class="auth">
+  <div class="auth__art"><img src="{{ url_for('static', filename='img/logo@2x.png') }}" alt="Recipeat" width="1200" height="639"></div>
+  <div class="auth__form">
+    <form method="post" action="/daftar" novalidate>
+      {{ csrf() }}
+      <h1 class="h1">Daftar</h1>
+      <p class="auth__sub">Buat Akun Anda</p>
+      <div class="form-stack">
+        {{ error_box(error) }}
+        <div class="field"><label for="name">Nama Lengkap</label><input id="name" name="name" autocomplete="name" required maxlength="60" value="{{ values.name or '' }}"></div>
+        <div class="field"><label for="email">Alamat Email</label><input id="email" name="email" type="email" autocomplete="email" required value="{{ values.email or '' }}"></div>
+        <div>
+          {{ password_field('password', 'Kata Sandi', 'new-password', 'minlength="8" maxlength="72" aria-describedby="pw-hint"') }}
+          <p class="field__hint" id="pw-hint">Minimal 8 karakter, kombinasi huruf dan angka.</p>
+        </div>
+        {{ password_field('confirm', 'Konfirmasi Kata Sandi', 'new-password') }}
+        <button class="btn btn--block btn--lg mt-2" type="submit">Daftar</button>
+      </div>
+      <p class="auth__alt">Sudah punya akun? <a href="/masuk"><b>Masuk di sini</b></a></p>
+    </form>
+  </div>
+</main>
+{% endblock %}
