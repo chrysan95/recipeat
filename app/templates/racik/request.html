@@ -35,7 +35,7 @@
           <tbody>
             {% for m in mine %}
               <tr><td><b>{{ m.name }}</b><small>{{ time_ago(m.created_at) }}</small></td><td>{{ m.category }}</td>
-                <td><span class="pill pill--sm pill--{{ m.status }}">{{ {'pending': 'Menunggu', 'approved': 'Disetujui', 'rejected': 'Ditolak'}[m.status] }}</span>
+                <td><span class="pill pill--{{ m.status }}">{{ {'pending': 'Menunggu', 'approved': 'Disetujui', 'rejected': 'Ditolak'}[m.status] }}</span>
                   {% if m.review_note %}<small>{{ m.review_note }}</small>{% endif %}</td></tr>
             {% else %}<tr><td colspan="3" class="muted">Belum ada pengajuan.</td></tr>{% endfor %}
           </tbody>

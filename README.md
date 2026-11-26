@@ -1,4 +1,4 @@
-<p align="center"><img src="public/static/img/logo.png" width="350" alt="Recipeat Logo"></p>
+<p align="center"><img src="public/static/img/logo.webp" width="350" alt="Recipeat Logo"></p>
 <h1 align="center">Recipeat</h1>
 <p align="center">A recipe website for home cooks. Find what to cook today, cook from what's already in your kitchen (Racik), follow recipes step by step, and get recommendations that respect your taste, portion size, diet and allergies.</p>
 
@@ -10,10 +10,17 @@
 - **Racik**: pick the ingredients you have into the **Keranjang**, get recipes ranked by how many ingredients match
 - **Recipe page**: prep/cook time, price range, origin, portion scaling, copy ingredient list, cook mode, bookmarks and reviews
 - **Add recipe** with photo, video link and per-step media
-- **Request a new ingredient** with a photo; an **admin** approves or rejects it
+- **Request a new ingredient** with a photo; an **admin** approves (and can replace the photo) or rejects it with a reason
 - **Preferences**: portion, taste, meal time, diet (vegetarian/vegan/halal) and allergies
-- **Profile**: change name/email, password and profile picture
-- **Sponsor** promotions on the home page and as notifications
+- **Profile**: name/email, password and profile picture (food preferences for regular users only)
+- **Promotions**: sponsors and admins create promotions shown on the home page and sent as notifications
+
+### What each role sees
+| Role | Navbar | Resep tab | Notifikasi tab |
+|---|---|---|---|
+| User | Home · Racik · Resep · Notifikasi | Resep Tersimpan + Resep Anda | Notifications |
+| Sponsor | Resep · Notifikasi | Resep Anda (+ Ajukan bahan baru) | Kelola Promosi |
+| Admin | Resep · Notifikasi | Verifikasi Bahan + Riwayat Bahan | Kelola Promosi |
 
 ## Architecture
 ```
@@ -30,16 +37,15 @@ Local:  docker compose → PostgreSQL :5432 + Redis :6379, app on :5000
 | `/` | Home: search, quick ingredients, recommendations |
 | `/cari` | Search with filters and sorting |
 | `/racik`, `/racik/hasil?bahan=` | Pick ingredients, matching recipes |
-| `/resep`, `/resep/tersimpan` | My recipes, saved recipes |
+| `/resep`, `/resep/tersimpan` | Saved recipes + my recipes (sponsors: my recipes only), saved recipes |
 | `/resep/<id>`, `/resep/<id>/masak` | Recipe detail, cook mode |
 | `/resep/baru`, `/resep/<id>/ubah` | Add / edit recipe |
 | `/bahan/ajukan` | Request a new ingredient |
-| `/notifikasi` | Notifications |
+| `/notifikasi` | Notifications (sponsors and admins are sent to `/sponsor/promosi`) |
 | `/profil`, `/profil/kata-sandi`, `/profil/preferensi`, `POST /profil/foto` | Profile pages, profile picture |
-| `/admin/bahan` | Admin: verify ingredients |
-| `/sponsor/promosi` | Sponsor: manage promotions |
+| `/admin/bahan` | Admin's Resep tab: verify ingredients, ingredient history |
+| `/sponsor/promosi` | Sponsor's and admin's Notifikasi tab: manage promotions |
 | `/img/<id>` | Uploaded images |
-| `/kredit-foto` | Photo credits |
 | `/healthz` | Health check |
 
 ## Run on localhost
@@ -66,18 +72,19 @@ Open http://localhost:5000. The database only contains dummy data.
 Tests: `docker compose exec db createdb -U postgres recipeat_test`, then `pytest`.
 
 ## Deploy
-Push to GitHub, import the repo in Vercel and set `DATABASE_URL` (Neon, pooled), `REDIS_URL` (Upstash, `rediss://`) and `SECRET_KEY`. Tables and dummy data are created on the first request (`app/bootstrap.py`). Set `SEED_DUMMY_DATA=0` to skip the dummy data.
+Push to GitHub, import the repo in Vercel and set `DATABASE_URL` (Neon, pooled), `REDIS_URL` (Upstash, `rediss://`) and `SECRET_KEY`. Tables and dummy data are created on the first request (`app/bootstrap.py`). Set `SEED_DUMMY_DATA=0` to skip the dummy data. Static files are linked with a version (`style.css?v=…`). Versioned files are cached for a year, others are always revalidated (`vercel.json`), so a new deploy shows up immediately.
 
 ## Project structure
 ```
 wsgi.py                     entry point for Vercel, Gunicorn and the flask CLI
 vercel.json                 Vercel function settings and static cache headers
 .vercelignore               files left out of the Vercel bundle
-.python-version             Python version for Vercel
+.python-version             Python version for Vercel and CI
 gunicorn.conf.py            local production-like server
 docker-compose.yml          local PostgreSQL + Redis
 .env.example                environment variables template
-requirements.txt            app dependencies (requirements-dev.txt adds pytest)
+requirements.txt            app dependencies (requirements-dev.txt adds pytest, 
+                            gunicorn)
 app/
   __init__.py               create_app(): extensions, blueprints, error pages
   config.py                 settings read from environment variables
@@ -92,20 +99,23 @@ app/
   uploads.py                validates image uploads and stores them in PostgreSQL
   helpers.py                Jinja helpers (dates, prices, initials, quantities)
   icons.py                  inline SVG icons
-  photo_credits.py          food photos from Wikimedia Commons and their credits
+  photo_credits.py          food photos from Wikimedia Commons + their hover 
+                            credit
   seed.py, seed_data.json   `flask seed` dummy data and `flask dump-sql`
   blueprints/               routes: auth, recipes, editor (add/edit recipe), racik,
                             profile, roles (admin + sponsor), media (/img/<id>)
   templates/                pages; partials/ has the navbar, macros and profile layout
-public/static/              css/style.css (design system), js/, img/ (logos)
-migrations/                 Alembic database migrations
+public/static/              css/style.css (design system), js/, img/ (logo.webp, 
+                            logo@2x.webp, weblogo.png)
+migrations/                 Alembic database migrations (schema, images, food     
+                            photos, profile picture, indexes)
 database/recipeat_dummy.sql same dummy data as a plain SQL dump
 tests/                      pytest tests against PostgreSQL + Redis
 .github/workflows/ci.yml    runs the tests on every push
 ```
 
 ## Credits
-Font: Figtree (Google Fonts, OFL). Food photos: Wikimedia Commons, listed in `/kredit-foto`. Libraries: Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-Login, Flask-WTF, Flask-Session, Flask-Limiter, psycopg, redis-py, bcrypt, Gunicorn.
+Font: Font: Figtree (Google Fonts, OFL). Food photos: Wikimedia Commons, listed below and shown when hovering a photo. Libraries: Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-Login, Flask-WTF, Flask-Session, Flask-Limiter, psycopg, redis-py, bcrypt, Gunicorn. Libraries: Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-Login, Flask-WTF, Flask-Session, Flask-Limiter, psycopg, redis-py, bcrypt, Gunicorn.
 
 | Untuk | Berkas Commons | Penulis | Lisensi |
 |---|---|---|---|

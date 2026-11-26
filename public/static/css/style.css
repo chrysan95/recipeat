@@ -439,9 +439,9 @@ body.has-drawer { overflow: hidden; }
 .reject-field input { padding-right: 7rem; }
 .reject-field .btn { position: absolute; right: var(--s1); top: var(--s1); }
 .reject-field .btn:disabled { background: #F4C3C8; opacity: 1; }
-.field.tag-field { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1); min-height: var(--s6); padding: var(--s1) var(--s2); border: .0625rem solid var(--navy); border-radius: var(--r-sm); }
+.field.tag-field { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1); min-height: var(--s6); padding: .6875rem var(--s2); border: .0625rem solid var(--navy); border-radius: var(--r-sm); }
 .tag-field__label { position: absolute; top: -.75rem; left: var(--s1); padding: 0 var(--s1); background: var(--white); }
-.tag-field .tag-toggle { position: relative; top: auto; left: auto; max-width: none; pointer-events: auto; background: transparent; display: none; align-items: center; height: var(--s4); padding: 0 var(--s2); border: .125rem solid var(--navy); border-radius: var(--pill); cursor: pointer; }
+.tag-field .tag-toggle { position: relative; top: auto; left: auto; max-width: none; pointer-events: auto; background: transparent; display: none; align-items: center; height: var(--s3); padding: 0 .75rem; border: .125rem solid var(--navy); border-radius: var(--pill); cursor: pointer; }
 .tag-toggle input { position: absolute; opacity: 0; pointer-events: none; }
 .tag-field .tag-toggle:has(input:checked) { display: inline-flex; background: var(--navy); color: var(--white); }
 .tag-field.is-open .tag-toggle:not(:has(input:checked)) { display: inline-flex; }
@@ -452,14 +452,14 @@ body.has-drawer { overflow: hidden; }
 .avatar--xs { width: var(--s4); height: var(--s4); font-size: var(--fs-1); font-weight: 700; }
 
 /* Status pills (riwayat, promosi) + plain tables */
-.pill { display: inline-flex; align-items: center; justify-content: center; min-width: 10rem; height: var(--s6); padding: 0 var(--s3); border-radius: var(--pill); font-weight: 700; white-space: nowrap; }
+.pill { display: inline-flex; align-items: center; justify-content: center; min-width: 7rem; height: var(--s4); padding: 0 var(--s2); border-radius: var(--pill); font-weight: 700; white-space: nowrap; }
 .pill--pending { background: #F1EFDA; color: #6B5A23; }
 .pill--approved { background: #DDF2E1; color: #2D6A3A; }
 .pill--rejected { background: #F6DFE1; color: #7E2A31; }
-.table--plain th { padding-bottom: var(--s3); border-bottom: .0625rem solid var(--muted); }
-.table--plain td { border-bottom: 0; padding-block: var(--s3) 0; }
+.table--plain th { padding-bottom: var(--s1); border-bottom: .0625rem solid var(--muted); }
+.table--plain td { border-bottom: 0; padding-block: var(--s2); vertical-align: middle; }
+.table--plain tbody tr:first-child td { padding-top: var(--s3); }
 .table--plain th:first-child, .table--plain td:first-child { padding-left: 0; }
-.pill--sm { height: var(--s4); min-width: 0; padding: 0 var(--s2); }
 .row-actions { display: flex; justify-content: flex-end; gap: var(--s3); }
 
 /* ---------- Auth ---------- */
@@ -499,7 +499,6 @@ body.has-drawer { overflow: hidden; }
 /* ---------- Editor (add recipe) ---------- */
 .editor fieldset { border: 0; padding: 0; margin: var(--s6) 0 0; min-width: 0; }
 .editor fieldset:first-of-type { margin-top: 0; }
-.editor .panel__sub ~ fieldset:first-of-type { margin-top: var(--s6); }
 .editor legend { padding: 0; font-size: var(--fs-2); line-height: var(--lh-2); font-weight: 700; }
 .editor legend small { font-size: var(--fs-1); font-weight: 400; color: var(--muted); margin-left: var(--s1); }
 .editor .hint { margin-top: var(--s1); color: var(--muted); }

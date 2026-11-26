@@ -5,7 +5,6 @@
   <div class="page-head"><div class="page-head__title"><a class="back-btn" href="/sponsor/promosi" aria-label="Kembali">{{ icon('arrowLeft') }}</a><h1 class="h1">{{ 'Ubah Promosi' if v.id else 'Promosi Baru' }}</h1></div></div>
 <form class="panel editor mt-4" method="post" action="{{ '/sponsor/promosi/%d'|format(v.id) if v.id else '/sponsor/promosi/baru' }}">
   {{ csrf() }}
-  <p class="panel__sub" style="margin-top:0">Tampil sebagai kartu “Dipersembahkan oleh …” di beranda.</p>
   {{ error_box(error) }}
   <fieldset><legend>Isi promosi</legend>
     <div class="form-stack">
