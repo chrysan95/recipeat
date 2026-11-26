@@ -1,0 +1,47 @@
+{% extends "partials/_profile_layout.html" %}
+{% from "partials/_macros.html" import csrf, flashes, media %}
+{% block panel %}
+<section class="panel">
+  <h1 class="panel__title">Verifikasi Bahan</h1>
+  <p class="panel__sub">Setujui bahan yang diajukan pengguna atau tolak dengan alasan. Pengaju akan menerima notifikasi.</p>
+  {{ flashes() }}
+  <h2 class="h3 mt-6">Menunggu verifikasi ({{ pending|length }})</h2>
+  {% for i in pending %}
+    <article class="review-card">
+      {{ media(i.image_url, i.name, 'ph--round') }}
+      <div>
+        <p class="review-card__name"><b>{{ i.name }}</b> <span class="muted">· {{ i.category }}</span></p>
+        <p class="review-card__meta">Diajukan {{ i.requester or 'pengguna' }} · {{ time_ago(i.created_at) }}</p>
+        {% if i.request_note %}<p class="review-card__note">“{{ i.request_note }}”</p>{% endif %}
+        <form method="post" action="/admin/bahan/{{ i.id }}">
+          {{ csrf() }}
+          <div class="form-grid">
+            <div class="field"><label for="n{{ i.id }}">Nama</label><input id="n{{ i.id }}" name="name" value="{{ i.name }}" maxlength="40"></div>
+            <div class="field"><label for="c{{ i.id }}">Kategori</label><select id="c{{ i.id }}" name="category_id">{% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if c.id == i.category_id }}>{{ c.name }}</option>{% endfor %}</select></div>
+          </div>
+          <div class="chips">
+            <label class="chip chip--lg"><input type="checkbox" name="is_vegan" value="1" {{ 'checked' if i.is_vegan }}>Vegan</label>
+            <label class="chip chip--lg"><input type="checkbox" name="is_vegetarian" value="1" {{ 'checked' if i.is_vegetarian }}>Vegetarian</label>
+            <label class="chip chip--lg"><input type="checkbox" name="is_halal" value="1" {{ 'checked' if i.is_halal }}>Halal</label>
+          </div>
+          <div class="decide">
+            <button class="btn" name="action" value="approve">{{ icon('check') }} Setujui</button>
+            <div class="field"><label for="r{{ i.id }}">Alasan penolakan</label><input id="r{{ i.id }}" name="review_note" maxlength="200" placeholder="mis. Sudah ada sebagai …"></div>
+            <button class="btn btn--danger" name="action" value="reject">Tolak</button>
+          </div>
+        </form>
+      </div>
+    </article>
+  {% else %}<div class="empty mt-2">Tidak ada pengajuan baru.</div>{% endfor %}
+
+  <h2 class="h3 mt-6">Riwayat</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Bahan</th><th>Pengaju</th><th>Status</th><th>Catatan</th></tr></thead>
+      <tbody>{% for r in reviewed %}<tr><td><b>{{ r.name }}</b></td><td>{{ r.requester or '-' }}</td>
+        <td><span class="badge badge--{{ r.status }}">{{ 'Disetujui' if r.status == 'approved' else 'Ditolak' }}</span></td><td class="muted">{{ r.review_note or '' }}</td></tr>
+        {% else %}<tr><td colspan="4" class="muted">Belum ada riwayat.</td></tr>{% endfor %}</tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

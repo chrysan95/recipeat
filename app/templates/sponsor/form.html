@@ -1,0 +1,45 @@
+{% extends "partials/_profile_layout.html" %}
+{% from "partials/_macros.html" import csrf, error_box %}
+{% block panel %}
+<div>
+<form class="panel editor" method="post" action="{{ '/sponsor/promosi/%d'|format(v.id) if v.id else '/sponsor/promosi/baru' }}">
+  {{ csrf() }}
+  <h1 class="panel__title">{{ 'Ubah Promosi' if v.id else 'Promosi Baru' }}</h1>
+  <p class="panel__sub">Tampil sebagai kartu “Dipersembahkan oleh …” di beranda.</p>
+  {{ error_box(error) }}
+  <fieldset><legend>Isi promosi</legend>
+    <div class="form-stack">
+      <div class="grid-2">
+        <div class="field"><label for="brand">Brand *</label><input id="brand" name="brand" maxlength="40" required value="{{ v.brand }}"></div>
+        <div class="field"><label for="title">Judul *</label><input id="title" name="title" maxlength="80" required value="{{ v.title }}"></div>
+      </div>
+      <div class="field"><label for="body">Pesan</label><textarea id="body" name="body" maxlength="300">{{ v.body }}</textarea></div>
+      <div class="grid-2">
+        <div class="field"><label for="cta_label">Teks tombol</label><input id="cta_label" name="cta_label" maxlength="30" value="{{ v.cta_label or '' }}"></div>
+        <div class="field"><label for="cta_url">Link tujuan</label><input id="cta_url" name="cta_url" placeholder="/cari?jenis=berat atau https://…" value="{{ v.cta_url or '' }}"></div>
+        <div class="field"><label for="starts_on">Mulai *</label><input id="starts_on" type="date" name="starts_on" required value="{{ v.starts_on or '' }}"></div>
+        <div class="field"><label for="ends_on">Selesai</label><input id="ends_on" type="date" name="ends_on" value="{{ v.ends_on or '' }}"></div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset><legend>Resep unggulan <small>maks. 4</small></legend>
+    <div class="chips mt-2">{% for r in recipes %}<label class="chip"><input type="checkbox" name="recipe_ids" value="{{ r.id }}" {{ 'checked' if r.id in v.recipe_ids }}>{{ r.title }}</label>{% endfor %}</div>
+  </fieldset>
+  <fieldset><legend>Penayangan</legend>
+    <div class="chips mt-2">
+      <label class="chip chip--lg"><input type="checkbox" name="active" value="1" {{ 'checked' if v.active }}>Aktif</label>
+      <label class="chip chip--lg"><input type="checkbox" name="broadcast" value="1" {{ 'checked' if v.broadcast }}>Kirim notifikasi ke semua pengguna</label>
+    </div>
+  </fieldset>
+  <div class="panel__actions">
+    <a class="btn btn--outline" href="/sponsor/promosi">Batal</a>
+    <button class="btn">Simpan</button>
+  </div>
+</form>
+{% if v.id %}
+  <form method="post" action="/sponsor/promosi/{{ v.id }}" class="mt-3" style="text-align:right" onsubmit="return confirm('Hapus promosi ini?')">
+    {{ csrf() }}<button class="btn btn--ghost btn--sm danger-link" name="action" value="delete">{{ icon('trash') }} Hapus promosi</button>
+  </form>
+{% endif %}
+</div>
+{% endblock %}

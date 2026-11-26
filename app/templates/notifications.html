@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "partials/_macros.html" import recipe_card %}
+{% block content %}
+<main class="container page">
+  <h1 class="h1">Notifikasi</h1>
+  {% set ns = namespace(any=false) %}
+  {% for label, items in groups if items %}{% set ns.any = true %}
+    <h2 class="notif-group">{{ label }}</h2>
+    {% for n in items %}
+      <article class="notif">
+        <div class="notif__icon" title="{{ n.sender }}">{{ icon('megaphone') if n.promotion_id else initials(n.sender) }}</div>
+        <div>
+          <h3 class="h3">{{ n.title }}</h3>
+          <p class="notif__meta">{{ n.sender }} · {{ time_ago(n.created_at) }}{{ ' · Promosi' if n.promotion_id }}</p>
+          {% if n.body %}<p class="notif__body">{{ n.body }}</p>{% endif %}
+          {% if n.recipes %}<div class="grid-cards">{% for r in n.recipes %}{{ recipe_card(r) }}{% endfor %}</div>{% endif %}
+          {% if n.link and not n.recipes %}<a class="link-more mt-2" href="{{ n.link }}"><b>Lihat</b> {{ icon('chevronRight', size=16) }}</a>{% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  {% endfor %}
+  {% if not ns.any %}<div class="empty section">Belum ada notifikasi.</div>{% endif %}
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recipe.js') }}" defer></script>{% endblock %}
